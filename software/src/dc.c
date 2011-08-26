@@ -161,22 +161,17 @@ void dc_init(void) {
 	Pin dc_pins[] = {PINS_DC};
 	PIO_Configure(dc_pins, PIO_LISTSIZE(dc_pins));
 
+	// Configure and enable power measurements
 	Pin dc_power_management_pins[] = {VOLTAGE_STACK_PIN,
 	                                  VOLTAGE_EXTERN_PIN,
-	                                  VOLTAGE_STACK_SWITCH_PIN};
+	                                  VOLTAGE_STACK_SWITCH_PIN,
+	                                  CURRENT_CONSUMPTION_PIN};
 	PIO_Configure(dc_power_management_pins,
 	              PIO_LISTSIZE(dc_power_management_pins));
 
 	// Initialize PWM
 	PMC->PMC_PCER0 = 1 << ID_PWM;
 	dc_update_pwm_frequency();
-
-    // Configure and enable power measurements
-	Pin dc_power_pins[] = {VOLTAGE_STACK_PIN,
-	                       VOLTAGE_STACK_SWITCH_PIN,
-	                       VOLTAGE_EXTERN_PIN,
-	                       CURRENT_CONSUMPTION_PIN};
-	PIO_Configure(dc_power_pins, PIO_LISTSIZE(dc_power_pins));
 
 	adc_channel_enable(VOLTAGE_EXTERN_CHANNEL);
 	adc_channel_enable(VOLTAGE_STACK_CHANNEL);
