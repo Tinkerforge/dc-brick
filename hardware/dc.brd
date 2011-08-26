@@ -1,6 +1,6 @@
-PCBNEW-BOARD Version 1 date Di 16 Aug 2011 10:06:45 CEST
+PCBNEW-BOARD Version 1 date Fr 26 Aug 2011 15:47:18 CEST
 
-# Created by Pcbnew(2011-04-28)-stable
+# Created by Pcbnew(2011-04-05)-testing
 
 $GENERAL
 encoding utf-8
@@ -9,8 +9,8 @@ Ly 1FFF8007
 EnabledLayers 1FFF8007
 Links 341
 NoConn 0
-Di 49086 28713 65246 45579
-Ndraw 67
+Di 49086 28713 111258 67560
+Ndraw 68
 Ntrack 2999
 Nzone 0
 BoardThickness 630
@@ -21,7 +21,7 @@ $EndGENERAL
 $SHEETDESCR
 Sheet A4 11700 8267
 Title ""
-Date "16 aug 2011"
+Date "26 aug 2011"
 Rev ""
 Comp "Tinkerforge GmbH"
 Comment1 "Licensed under CERN OHL v.1.1"
@@ -684,13 +684,13 @@ Po 197 0
 $EndPAD
 $EndMODULE  0402
 $MODULE 0402
-Po 50532 32146 900 0 4E0F76B0 4D2B6F09 ~~
+Po 50532 32146 900 0 4E57A354 4D2B6F09 ~~
 Li 0402
 Sc 4D2B6F09
 AR /4D11F510/4D13062D
 Op 0 0 0
 T0 0 -295 118 118 900 30 M V 20 N "R8"
-T1 -9 0 118 118 900 30 M V 20 N "1k"
+T1 -9 0 118 118 900 30 M V 20 N "10k"
 DS -335 177 335 177 60 20
 DS 335 177 335 -177 60 20
 DS 335 -177 -335 -177 60 20
@@ -48699,6 +48699,19 @@ Ne 66 "N-000112"
 Po -749 1062
 $EndPAD
 $EndMODULE  SOIC-8-MOSFET
+$TEXTPCB
+Te "Copyright Tinkerforge GmbH 2011."
+nl "This documentation describes Open Hardware and is licensed under the"
+nl "CERN OHL v. 1.1."
+nl "You may redistribute and modify this documentation under the terms of the"
+nl "CERN OHL v.1.1. (http://ohwr.org/cernohl). This documentation is distributed"
+nl "WITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF"
+nl "MERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A"
+nl "PARTICULAR PURPOSE. Please see the CERN OHL v.1.1 for applicable"
+nl "conditions"
+Po 101791 63140 315 315 79 0
+De 25 1 0 Normal
+$EndTEXTPCB
 $DRAWSEGMENT
 Po 0 63909 30384 63958 30384 315
 De 20 0 900 0 0
