@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date Do 25 Aug 2011 13:47:11 CEST
+EESchema Schematic File Version 2  date Fr 26 Aug 2011 15:47:24 CEST
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -30,14 +30,13 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:tinkerforge
-LIBS:dc-cache
 EELAYER 25  0
 EELAYER END
 $Descr A4 11700 8267
 encoding utf-8
 Sheet 4 5
 Title ""
-Date "25 aug 2011"
+Date "26 aug 2011"
 Rev ""
 Comp "Tinkerforge GmbH"
 Comment1 "Licensed under CERN OHL v.1.1"
@@ -447,7 +446,7 @@ L B0520LW-7-F D7
 U 1 1 4CC0497F
 P 10600 4150
 F 0 "D7" H 10600 4250 40  0000 C CNN
-F 1 "PMEG1020EH" H 10600 4050 40  0000 C CNN
+F 1 "B0520LW-7-F" H 10600 4050 40  0000 C CNN
 F 2 "SOD-123" H 10600 4050 60  0001 C CNN
 	1    10600 4150
 	1    0    0    -1  

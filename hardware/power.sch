@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date Do 25 Aug 2011 13:47:11 CEST
+EESchema Schematic File Version 2  date Fr 26 Aug 2011 15:47:24 CEST
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -30,14 +30,13 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:tinkerforge
-LIBS:dc-cache
 EELAYER 25  0
 EELAYER END
 $Descr A4 11700 8267
 encoding utf-8
 Sheet 2 5
 Title ""
-Date "25 aug 2011"
+Date "26 aug 2011"
 Rev ""
 Comp "Tinkerforge GmbH"
 Comment1 "Licensed under CERN OHL v.1.1"
@@ -568,7 +567,7 @@ L R R8
 U 1 1 4D13062D
 P 2100 3700
 F 0 "R8" V 2180 3700 50  0000 C CNN
-F 1 "1k" V 2100 3700 50  0000 C CNN
+F 1 "10k" V 2100 3700 50  0000 C CNN
 F 2 "0402" H 2100 3700 60  0001 C CNN
 	1    2100 3700
 	0    1    1    0   
