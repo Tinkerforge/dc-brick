@@ -9,7 +9,7 @@ from ip_connection import IPConnection
 from brick_dc import DC
 
 if __name__ == "__main__":
-    ipcon = IPConnection(HOST, PORT) # Create ip connection to brick
+    ipcon = IPConnection(HOST, PORT) # Create ip connection to brickd
 
     dc = DC(UID) # Create device object
     ipcon.add_device(dc) # Add device to ip connection

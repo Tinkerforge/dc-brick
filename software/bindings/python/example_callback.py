@@ -23,7 +23,7 @@ def cb_reached(velocity):
         print('Error') # Can only happen if another program sets velocity
 
 if __name__ == "__main__":
-    ipcon = IPConnection(HOST, PORT) # Create ip connection to brick
+    ipcon = IPConnection(HOST, PORT) # Create ip connection to brickd
 
     ipcon.add_device(dc) # Add device to ip connection
     # Don't use device before it is added to a connection
