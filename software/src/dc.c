@@ -34,6 +34,7 @@
 #include "bricklib/drivers/usart/usart.h"
 #include "bricklib/drivers/pwmc/pwmc.h"
 #include "bricklib/utility/util_definitions.h"
+#include "bricklib/utility/led.h"
 #include <stdio.h>
 
 Pin pin_input1 = PIN_INPUT1;
@@ -61,6 +62,8 @@ uint8_t dc_mode = DC_MODE_DRIVE_BRAKE;
 
 int32_t dc_last_signal_velocity = 0;
 
+uint8_t dc_led_error_reason = 0;
+
 extern ComType com_current;
 extern uint8_t com_stack_id;
 
@@ -83,6 +86,8 @@ void tick_task(void) {
 		dc_current_velocity_signal();
 	}
 
+	dc_check_error_signals();
+
 	if(dc_velocity_goal == dc_velocity) {
 		return;
 	}
@@ -104,8 +109,6 @@ void tick_task(void) {
 	if(dc_velocity_goal == dc_velocity) {
 		dc_velocity_reached_signal();
 	}
-
-	dc_check_error_signals();
 }
 
 void dc_update_pwm_frequency(void) {
@@ -148,6 +151,9 @@ void dc_update_pwm_frequency(void) {
 void dc_enable(void) {
 	PIO_Set(&pin_enable);
 	dc_enabled = true;
+
+	dc_led_error_reason &= ~DC_LED_ERROR_SHUTDOWN;
+	led_off(LED_STD_RED);
 }
 
 void dc_disable(void) {
@@ -155,6 +161,9 @@ void dc_disable(void) {
 	dc_enabled = false;
 	// Set current velocity to 0 and keep old goal
 	dc_velocity = 0;
+
+	dc_led_error_reason &= ~DC_LED_ERROR_SHUTDOWN;
+	led_off(LED_STD_RED);
 }
 
 void dc_init(void) {
@@ -216,7 +225,7 @@ void dc_check_error_signals(void) {
 	const uint16_t stack_voltage    = dc_get_stack_voltage();
 
 	// Under Voltage if external voltage is below minimum voltage (regardless
-	// of stack voltage), or if external voltage is zero and stack velotage is
+	// of stack voltage), or if external voltage is zero and stack voltage is
 	// below minimum voltage
 	if((dc_tick_counter % 1000 == 0 && dc_enabled) &&
 	   ((external_voltage > DC_VOLTAGE_EPSILON &&
@@ -224,16 +233,19 @@ void dc_check_error_signals(void) {
 		(external_voltage < DC_VOLTAGE_EPSILON &&
 		 stack_voltage > DC_VOLTAGE_EPSILON &&
 		 stack_voltage < dc_minimum_voltage))) {
+
 		UnderVoltageSignal uvs = {
 				com_stack_id,
 				TYPE_UNDER_VOLTAGE,
 				sizeof(UnderVoltageSignal),
-				external_voltage == 0 ? stack_voltage : external_voltage
+				external_voltage < DC_VOLTAGE_EPSILON ? stack_voltage : external_voltage
 		};
 
 		send_blocking_with_timeout(&uvs,
 		                           sizeof(UnderVoltageSignal),
 		                           com_current);
+
+		led_on(LED_STD_RED);
 	// If there is no under voltage, we are currently enabled and the
 	// status flag is low: There is a short-circuit or over-temperature
 	// -> Emergency Shutdown
@@ -244,9 +256,9 @@ void dc_check_error_signals(void) {
 		// Wait for DC_MAX_EMERGENCY_SHUTDOWN ms until signal is emitted
 		if(dc_emergency_shutdown_counter >= DC_MAX_EMERGENCY_SHUTDOWN) {
 			EmergencyShutdownSignal ess = {
-					com_stack_id,
-					TYPE_EMERGENCY_SHUTDOWN,
-					sizeof(EmergencyShutdownSignal),
+				com_stack_id,
+				TYPE_EMERGENCY_SHUTDOWN,
+				sizeof(EmergencyShutdownSignal),
 			};
 
 			send_blocking_with_timeout(&ess,
@@ -255,9 +267,16 @@ void dc_check_error_signals(void) {
 
 			dc_disable();
 			dc_emergency_shutdown_counter = 0;
+
+			dc_led_error_reason |= DC_LED_ERROR_SHUTDOWN;
+			led_on(LED_STD_RED);
 		}
 	} else {
 		dc_emergency_shutdown_counter = 0;
+		if(!(dc_led_error_reason & DC_LED_ERROR_SHUTDOWN) &&
+		   (dc_tick_counter % 1000 == 0)) {
+			led_off(LED_STD_RED);
+		}
 	}
 }
 

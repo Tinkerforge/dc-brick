@@ -49,6 +49,8 @@
 
 #define DC_NUM_PWM_FREQUENCIES 11  // BOARD_MCK/2^0 .. 2^10
 
+#define DC_LED_ERROR_SHUTDOWN 1
+
 void new_connection(void);
 void tick_task(void);
 
