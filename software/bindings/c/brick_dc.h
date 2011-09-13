@@ -1,5 +1,5 @@
 /*************************************************************
- * This file was automatically generated on 23.08.2011.      *
+ * This file was automatically generated on 13.09.2011.      *
  *                                                           *
  * If you have a bugfix for this file and want to commit it, *
  * please fix the bug in the generator. You can find a link  *
@@ -42,8 +42,8 @@ int dc_set_current_velocity_period(DC *dc, uint16_t period);
 int dc_get_current_velocity_period(DC *dc, uint16_t *ret_period);
 int dc_under_voltage(DC *dc, uint16_t *ret_voltage);
 int dc_emergency_shutdown(DC *dc);
-int dc_velocity_reached(DC *dc, int16_t *ret_voltage);
-int dc_current_velocity(DC *dc, int16_t *ret_voltage);
+int dc_velocity_reached(DC *dc, int16_t *ret_velocity);
+int dc_current_velocity(DC *dc, int16_t *ret_velocity);
 
 void dc_register_callback(DC *dc, uint8_t cb, void *func);
 

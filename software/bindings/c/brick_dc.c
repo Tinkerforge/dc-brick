@@ -1,5 +1,5 @@
 /*************************************************************
- * This file was automatically generated on 2011-08-23.      *
+ * This file was automatically generated on 2011-09-13.      *
  *                                                           *
  * If you have a bugfix for this file and want to commit it, *
  * please fix the bug in the generator. You can find a link  *
@@ -269,14 +269,14 @@ typedef struct {
 	uint8_t stack_id;
 	uint8_t type;
 	uint16_t length;
-	int16_t voltage;
+	int16_t velocity;
 } PACKED VelocityReachedCallback;
 
 typedef struct {
 	uint8_t stack_id;
 	uint8_t type;
 	uint16_t length;
-	int16_t voltage;
+	int16_t velocity;
 } PACKED CurrentVelocityCallback;
 
 #ifdef _MSC_VER
@@ -793,13 +793,13 @@ int dc_callback_emergency_shutdown(DC *dc, const unsigned char *buffer) {
 
 int dc_callback_velocity_reached(DC *dc, const unsigned char *buffer) {
 	VelocityReachedCallback *vrc = (VelocityReachedCallback *)buffer;
-	((velocity_reached_func_t)dc->callbacks[vrc->type])(vrc->voltage);
+	((velocity_reached_func_t)dc->callbacks[vrc->type])(vrc->velocity);
 	return sizeof(VelocityReachedCallback);
 }
 
 int dc_callback_current_velocity(DC *dc, const unsigned char *buffer) {
 	CurrentVelocityCallback *cvc = (CurrentVelocityCallback *)buffer;
-	((current_velocity_func_t)dc->callbacks[cvc->type])(cvc->voltage);
+	((current_velocity_func_t)dc->callbacks[cvc->type])(cvc->velocity);
 	return sizeof(CurrentVelocityCallback);
 }
 
