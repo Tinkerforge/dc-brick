@@ -25,7 +25,7 @@ public class ExampleCallback {
 		
 
 		// Add and implement velocity reached listener 
-		// (called if velocity set by set_velocity is reached)
+		// (called if velocity set by setVelocity is reached)
 		dc.addListener(new BrickDC.VelocityReachedListener() {
 			public void velocityReached(short velocity) {
 				if(velocity == 32767) {
@@ -42,7 +42,7 @@ public class ExampleCallback {
 
 		dc.enable();
 		// The acceleration has to be smaller or equal to the maximum acceleration
-		// of the dc motor, otherwise cb_reached will be called too early
+		// of the dc motor, otherwise the velocity reached listener will be called too early
 		dc.setAcceleration(5000); // Slow acceleration
 		dc.setVelocity((short)32767); // Full speed forward
 		
