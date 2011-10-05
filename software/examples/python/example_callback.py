@@ -5,8 +5,8 @@ HOST = "localhost"
 PORT = 4223
 UID = "apaYPikNHEj" # Change to your UID
 
-from ip_connection import IPConnection
-from brick_dc import DC
+from tinkerforge.ip_connection import IPConnection
+from tinkerforge.brick_dc import DC
 
 dc = DC(UID) # Create device object
 
