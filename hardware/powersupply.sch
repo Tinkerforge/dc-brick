@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date Fr 26 Aug 2011 15:47:24 CEST
+EESchema Schematic File Version 2  date Mon 13 Feb 2012 16:09:56 CET
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -36,8 +36,8 @@ $Descr A4 11700 8267
 encoding utf-8
 Sheet 5 5
 Title ""
-Date "26 aug 2011"
-Rev ""
+Date "3 jan 2012"
+Rev "1.0"
 Comp "Tinkerforge GmbH"
 Comment1 "Licensed under CERN OHL v.1.1"
 Comment2 "Copyright (©) 2011, B.Nordmeyer <bastian@tinkerforge.com>"
