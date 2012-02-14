@@ -52,7 +52,7 @@
 #define DC_LED_ERROR_SHUTDOWN 1
 
 void new_connection(void);
-void tick_task(void);
+void tick_task(uint8_t tick_type);
 
 void dc_enable(void);
 void dc_disable(void);

@@ -35,6 +35,7 @@
 #include "bricklib/drivers/pwmc/pwmc.h"
 #include "bricklib/utility/util_definitions.h"
 #include "bricklib/utility/led.h"
+#include "bricklib/utility/init.h"
 #include <stdio.h>
 
 Pin pin_input1 = PIN_INPUT1;
@@ -56,9 +57,12 @@ uint16_t dc_minimum_voltage = DC_MINIMUM_VOLTAGE;
 uint8_t dc_emergency_shutdown_counter = 0;
 bool dc_enabled = false;
 uint32_t dc_tick_counter = 0;
+uint32_t dc_message_tick_counter = 0;
 uint16_t dc_pwm_scale_value = 0;
 uint16_t dc_current_velocity_period = 0;
 uint8_t dc_mode = DC_MODE_DRIVE_BRAKE;
+bool dc_velocity_reached = false;
+bool dc_current_velocity = false;
 
 int32_t dc_last_signal_velocity = 0;
 
@@ -67,47 +71,64 @@ uint8_t dc_led_error_reason = 0;
 extern ComType com_current;
 extern uint8_t com_stack_id;
 
-void tick_task(void) {
+void tick_task(uint8_t tick_type) {
 	if(!dc_enabled) {
 		return;
 	}
-	dc_tick_counter++;
 
-	// Switch Output Voltage between extern and stack
-	if(dc_get_external_voltage() < DC_VOLTAGE_EPSILON) {
-		PIO_Set(&pin_voltage_switch);
-	} else {
-		PIO_Clear(&pin_voltage_switch);
-	}
+	if(tick_type == TICK_TASK_TYPE_CALCULATION) {
+		dc_tick_counter++;
 
-	// Emit current velocity signal if necessary
-	if((dc_current_velocity_period != 0) &&
-	   ((dc_tick_counter % dc_current_velocity_period) == 0)) {
-		dc_current_velocity_signal();
-	}
-
-	dc_check_error_signals();
-
-	if(dc_velocity_goal == dc_velocity) {
-		return;
-	}
-
-	if(dc_acceleration == 0) {
-		dc_velocity = dc_velocity_goal;
-	} else {
-		if(dc_velocity < dc_velocity_goal) {
-			dc_velocity = MIN(dc_velocity + dc_acceleration, dc_velocity_goal);
+		// Switch Output Voltage between extern and stack
+		if(dc_get_external_voltage() < DC_VOLTAGE_EPSILON) {
+			PIO_Set(&pin_voltage_switch);
 		} else {
-			dc_velocity = MAX(dc_velocity - dc_acceleration, dc_velocity_goal);
+			PIO_Clear(&pin_voltage_switch);
 		}
-	}
 
-	// Set new velocity
-	dc_velocity_to_pwm();
+		// Emit current velocity signal if necessary
+		if((dc_current_velocity_period != 0) &&
+		   ((dc_tick_counter % dc_current_velocity_period) == 0)) {
+			dc_current_velocity = true;
+		}
 
-	// Emit velocity reachead signal
-	if(dc_velocity_goal == dc_velocity) {
-		dc_velocity_reached_signal();
+		if(dc_velocity_goal == dc_velocity) {
+			return;
+		}
+
+		if(dc_acceleration == 0) {
+			dc_velocity = dc_velocity_goal;
+		} else {
+			if(dc_velocity < dc_velocity_goal) {
+				dc_velocity = MIN(dc_velocity + dc_acceleration,
+				                  dc_velocity_goal);
+			} else {
+				dc_velocity = MAX(dc_velocity - dc_acceleration,
+				                  dc_velocity_goal);
+			}
+		}
+
+		// Set new velocity
+		dc_velocity_to_pwm();
+
+		// Emit velocity reachead signal
+		if(dc_velocity_goal == dc_velocity) {
+			dc_velocity_reached = true;
+		}
+	} else if(tick_type == TICK_TASK_TYPE_MESSAGE) {
+		dc_message_tick_counter++;
+
+		if(dc_velocity_reached) {
+			dc_velocity_reached = false;
+			dc_velocity_reached_signal();
+		}
+
+		if(dc_current_velocity) {
+			dc_current_velocity = false;
+			dc_current_velocity_signal();
+		}
+
+		dc_check_error_signals();
 	}
 }
 
@@ -227,7 +248,7 @@ void dc_check_error_signals(void) {
 	// Under Voltage if external voltage is below minimum voltage (regardless
 	// of stack voltage), or if external voltage is zero and stack voltage is
 	// below minimum voltage
-	if((dc_tick_counter % 1000 == 0 && dc_enabled) &&
+	if((dc_message_tick_counter % 1000 == 0 && dc_enabled) &&
 	   ((external_voltage > DC_VOLTAGE_EPSILON &&
 		 external_voltage < dc_minimum_voltage) ||
 		(external_voltage < DC_VOLTAGE_EPSILON &&
