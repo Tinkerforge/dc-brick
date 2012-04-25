@@ -11,13 +11,11 @@ public class ExampleConfiguration {
 	public static void main(String args[]) throws Exception {
 		// Create connection to brickd
 		IPConnection ipcon = new IPConnection(host, port); // Can throw IOException
-
 		BrickDC dc = new BrickDC(UID); // Create device object
 
-		// Add device to ip connection
+		// Add device to IP connection
 		ipcon.addDevice(dc); // Can throw IPConnection.TimeoutException
 		// Don't use device before it is added to a connection
-		
 
 		dc.setPWMFrequency(10000); // Use PWM frequency of 10khz
 		dc.setDriveMode((short)1); // use 1 = Drive/Coast instead of 0 = Drive/Brake
@@ -25,7 +23,7 @@ public class ExampleConfiguration {
 		dc.enable();
 		dc.setAcceleration(5000); // Slow acceleration
 		dc.setVelocity((short)32767); // Full speed forward
-		
+
 		System.out.println("Press ctrl+c to exit");
 		ipcon.joinThread();
 	}

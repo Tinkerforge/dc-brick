@@ -24,7 +24,7 @@ void cb_reached(int16_t velocity) {
 }
 
 int main() {
-	// Create ip connection to brickd
+	// Create IP connection to brickd
 	IPConnection ipcon;
 	if(ipcon_create(&ipcon, HOST, PORT) < 0) {
 		fprintf(stderr, "Could not create connection\n");
@@ -34,7 +34,7 @@ int main() {
 	// Create device object
 	dc_create(&dc, UID); 
 
-	// Add device to ip connection
+	// Add device to IP connection
 	if(ipcon_add_device(&ipcon, &dc) < 0) {
 		fprintf(stderr, "Could not connect to Brick\n");
 		exit(1);
@@ -54,5 +54,5 @@ int main() {
 	dc_set_velocity(&dc, 32767); //Full speed forward
 
 	printf("Press ctrl+c to close\n");
-	ipcon_join_thread(&ipcon); // Join mainloop of ip connection
+	ipcon_join_thread(&ipcon); // Join mainloop of IP connection
 }

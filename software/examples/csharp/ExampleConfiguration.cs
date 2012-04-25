@@ -10,9 +10,8 @@ class Example
 	{
 		IPConnection ipcon = new IPConnection(HOST, PORT); // Create connection to brickd
 		BrickDC dc = new BrickDC(UID); // Create device object
-		ipcon.AddDevice(dc); // Add device to ip connection
+		ipcon.AddDevice(dc); // Add device to IP connection
 		// Don't use device before it is added to a connection
-
 
 		dc.SetPWMFrequency(10000); // Use PWM frequency of 10khz
 		dc.SetDriveMode(1); // use 1 = Drive/Coast instead of 0 = Drive/Brake
@@ -23,5 +22,5 @@ class Example
 
 		System.Console.WriteLine("Press ctrl+c to exit");
 		ipcon.JoinThread();
-    }
+	}
 }

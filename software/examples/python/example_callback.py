@@ -23,9 +23,9 @@ def cb_reached(velocity):
         print('Error') # Can only happen if another program sets velocity
 
 if __name__ == "__main__":
-    ipcon = IPConnection(HOST, PORT) # Create ip connection to brickd
+    ipcon = IPConnection(HOST, PORT) # Create IP connection to brickd
 
-    ipcon.add_device(dc) # Add device to ip connection
+    ipcon.add_device(dc) # Add device to IP connection
     # Don't use device before it is added to a connection
 
     # Register "velocity reached callback" to cb_reached

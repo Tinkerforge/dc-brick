@@ -33,9 +33,8 @@ class Example
 	{
 		IPConnection ipcon = new IPConnection(HOST, PORT); // Create connection to brickd
 		dc = new BrickDC(UID); // Create device object
-		ipcon.AddDevice(dc); // Add device to ip connection
+		ipcon.AddDevice(dc); // Add device to IP connection
 		// Don't use device before it is added to a connection
-
 
 		// Register "velocity reached callback" to ReachedCB
 		// cb_reached will be called every time a velocity set with
@@ -50,5 +49,5 @@ class Example
 
 		System.Console.WriteLine("Press ctrl+c to exit");
 		ipcon.JoinThread();
-    }
+	}
 }

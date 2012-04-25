@@ -19,10 +19,9 @@ public class ExampleCallback {
 
 		dc = new BrickDC(UID); // Create device object
 
-		// Add device to ip connection
+		// Add device to IP connection
 		ipcon.addDevice(dc); // Can throw IPConnection.TimeoutException
 		// Don't use device before it is added to a connection
-		
 
 		// Add and implement velocity reached listener 
 		// (called if velocity set by setVelocity is reached)
@@ -45,7 +44,7 @@ public class ExampleCallback {
 		// of the dc motor, otherwise the velocity reached listener will be called too early
 		dc.setAcceleration(5000); // Slow acceleration
 		dc.setVelocity((short)32767); // Full speed forward
-		
+
 		System.out.println("Press ctrl+c to exit");
 		ipcon.joinThread();
 	}
