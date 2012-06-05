@@ -17,7 +17,7 @@ ipcon.add_device dc # Add device to IP connection
 
 # Use velocity reached callback to swing back and forth between
 # full speed forward and full speed backward
-dc.register_callback BrickDC::CALLBACK_VELOCITY_REACHED, do |velocity|
+dc.register_callback(BrickDC::CALLBACK_VELOCITY_REACHED) do |velocity|
   if velocity == 32767
     puts 'Velocity: Full Speed forward, turning backward'
     dc.set_velocity(-32767)
