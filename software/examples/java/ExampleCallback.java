@@ -45,7 +45,7 @@ public class ExampleCallback {
 		dc.setAcceleration(5000); // Slow acceleration
 		dc.setVelocity((short)32767); // Full speed forward
 
-		System.out.println("Press ctrl+c to exit");
-		ipcon.joinThread();
+		System.console().readLine("Press key to exit\n");
+		ipcon.destroy();
 	}
 }

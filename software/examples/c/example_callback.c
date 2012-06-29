@@ -41,7 +41,6 @@ int main() {
 	}
 	// Don't use device before it is added to a connection
 
-
 	// Register "velocity reached callback" to cb_reached
 	// cb_reached will be called every time a velocity set with
 	// set_velocity is reached
@@ -53,6 +52,7 @@ int main() {
 	dc_set_acceleration(&dc, 5000); // Slow acceleration
 	dc_set_velocity(&dc, 32767); //Full speed forward
 
-	printf("Press ctrl+c to close\n");
-	ipcon_join_thread(&ipcon); // Join mainloop of IP connection
+	printf("Press key to exit\n");
+	getchar();
+	ipcon_destroy(&ipcon);
 }

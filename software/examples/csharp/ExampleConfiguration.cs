@@ -20,7 +20,8 @@ class Example
 		dc.SetAcceleration(5000); // Slow acceleration
 		dc.SetVelocity(32767); // Full speed forward
 
-		System.Console.WriteLine("Press ctrl+c to exit");
-		ipcon.JoinThread();
+		System.Console.WriteLine("Press key to exit");
+		System.Console.ReadKey();
+		ipcon.Destroy();
 	}
 }
