@@ -90,13 +90,10 @@
 #define PIN_USB_DETECT  {1 << 26, PIOA, ID_PIOA, PIO_INPUT, PIO_DEFAULT}
 // USB product descriptor (name of brick)
 #define PRODUCT_DESCRIPTOR { \
-	USBStringDescriptor_LENGTH(11), \
+	USBStringDescriptor_LENGTH(8), \
     USBGenericDescriptor_STRING, \
-    USBStringDescriptor_UNICODE('S'), \
-    USBStringDescriptor_UNICODE('e'), \
-    USBStringDescriptor_UNICODE('r'), \
-    USBStringDescriptor_UNICODE('v'), \
-    USBStringDescriptor_UNICODE('o'), \
+    USBStringDescriptor_UNICODE('D'), \
+    USBStringDescriptor_UNICODE('C'), \
     USBStringDescriptor_UNICODE(' '), \
     USBStringDescriptor_UNICODE('B'), \
     USBStringDescriptor_UNICODE('r'), \
