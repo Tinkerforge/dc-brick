@@ -68,6 +68,10 @@ int32_t dc_last_signal_velocity = 0;
 
 uint8_t dc_led_error_reason = 0;
 
+uint8_t dc_tick_calc_counter = 0;
+uint32_t dc_current_sum = 0;
+uint16_t dc_current = 0;
+
 extern ComType com_current;
 extern uint8_t com_stack_id;
 
@@ -77,6 +81,14 @@ void tick_task(uint8_t tick_type) {
 	}
 
 	if(tick_type == TICK_TASK_TYPE_CALCULATION) {
+		dc_tick_calc_counter++;
+		dc_current_sum += adc_channel_get_data(CURRENT_CONSUMPTION_CHANNEL);
+		if(dc_tick_calc_counter >= 100) {
+			dc_current = dc_current_sum/100;
+			dc_current_sum = 0;
+			dc_tick_calc_counter = 0;
+		}
+
 		dc_tick_counter++;
 
 		// Switch Output Voltage between extern and stack
@@ -378,7 +390,7 @@ uint16_t dc_get_stack_voltage(void) {
 }
 
 uint16_t dc_get_current_consumption(void) {
-	return adc_channel_get_data(CURRENT_CONSUMPTION_CHANNEL) *
+	return dc_current *
 	       CURRENT_CONSUMPTION_REFERENCE *
 	       CURRENT_CONSUMPTION_MULTIPLIER /
 	       VOLTAGE_MAX_VALUE;
