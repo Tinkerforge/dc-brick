@@ -47,10 +47,11 @@ int main() {
 	dc_register_callback(&dc, DC_CALLBACK_VELOCITY_REACHED, cb_reached);
 
 	dc_enable(&dc);
+
 	// The acceleration has to be smaller or equal to the maximum acceleration
 	// of the dc motor, otherwise cb_reached will be called too early
 	dc_set_acceleration(&dc, 5000); // Slow acceleration
-	dc_set_velocity(&dc, 32767); //Full speed forward
+	dc_set_velocity(&dc, 32767); // Full speed forward
 
 	printf("Press key to exit\n");
 	getchar();
