@@ -32,7 +32,7 @@ int main() {
 
 	dc_enable(&dc);
 	dc_set_acceleration(&dc, 5000); // Slow acceleration
-	dc_set_velocity(&dc, 32767); // Full speed
+	dc_set_velocity(&dc, 32767); // Full speed forward
 
 	printf("Press key to exit\n");
 	getchar();

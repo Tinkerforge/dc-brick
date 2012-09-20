@@ -18,7 +18,7 @@ public class ExampleConfiguration {
 		// Don't use device before it is added to a connection
 
 		dc.setPWMFrequency(10000); // Use PWM frequency of 10khz
-		dc.setDriveMode((short)1); // use 1 = Drive/Coast instead of 0 = Drive/Brake
+		dc.setDriveMode((short)1); // Use 1 = Drive/Coast instead of 0 = Drive/Brake
 
 		dc.enable();
 		dc.setAcceleration(5000); // Slow acceleration
