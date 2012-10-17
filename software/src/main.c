@@ -48,6 +48,8 @@
 
 #define LED_FLASH_RATE_BASE	333
 
+char brick_hardware_name[] = BRICK_HARDWARE_NAME;
+
 void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName) {
 	logf("Stack Overflow\n\r");
 	led_on(LED_STD_RED);
