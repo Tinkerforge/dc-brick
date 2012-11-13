@@ -6,3 +6,4 @@
 1.1.4: Add USB hotplug support (through bricklib)
 1.1.5: Set Interrupt pins to default (otherwise they can interfere with WIFI)
 1.1.6: Change Bricklet Context size from 250 to 256 (through bricklib)
+2.0.0: Support for protocol 2.0

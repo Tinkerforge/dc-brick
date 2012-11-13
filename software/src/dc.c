@@ -1,5 +1,5 @@
 /* dc-brick
- * Copyright (C) 2011 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2011-2012 Olaf Lüke <olaf@tinkerforge.com>
  *
  * dc.c: Implementation of DC-Brick specific functions
  *
@@ -33,6 +33,7 @@
 #include "bricklib/drivers/pio/pio.h"
 #include "bricklib/drivers/usart/usart.h"
 #include "bricklib/drivers/pwmc/pwmc.h"
+#include "bricklib/drivers/usb/USBD_HAL.h"
 #include "bricklib/utility/util_definitions.h"
 #include "bricklib/utility/led.h"
 #include "bricklib/utility/init.h"
@@ -73,9 +74,24 @@ uint32_t dc_current_sum = 0;
 uint16_t dc_current = 0;
 
 extern ComType com_current;
-extern uint8_t com_stack_id;
+extern uint32_t com_brick_uid;
 
-void tick_task(uint8_t tick_type) {
+void tick_task(const uint8_t tick_type) {
+	static int8_t message_counter = 0;
+
+	if(tick_type == TICK_TASK_TYPE_MESSAGE) {
+		if(message_counter != -1 && !usbd_hal_is_disabled(IN_EP)) {
+			message_counter++;
+			if(message_counter >= 100) {
+				message_counter = 0;
+				if(brick_init_enumeration(COM_USB)) {
+					com_current = COM_USB;
+					message_counter = -1;
+				}
+			}
+		}
+	}
+
 	if(!dc_enabled) {
 		return;
 	}
@@ -228,12 +244,9 @@ void dc_current_velocity_signal(void) {
 
 	dc_last_signal_velocity = dc_velocity;
 
-	CurrentVelocitySignal cvs = {
-		com_stack_id,
-		TYPE_CURRENT_VELOCITY,
-		sizeof(CurrentVelocitySignal),
-		dc_velocity/DC_VELOCITY_MULTIPLIER
-	};
+	CurrentVelocitySignal cvs;
+	com_make_default_header(&cvs, com_brick_uid, sizeof(CurrentVelocitySignal), FID_CURRENT_VELOCITY);
+	cvs.velocity = dc_velocity/DC_VELOCITY_MULTIPLIER;
 
 	send_blocking_with_timeout(&cvs,
 	                           sizeof(CurrentVelocitySignal),
@@ -241,12 +254,9 @@ void dc_current_velocity_signal(void) {
 }
 
 void dc_velocity_reached_signal(void) {
-	VelocityReachedSignal vrs = {
-		com_stack_id,
-		TYPE_VELOCITY_REACHED,
-		sizeof(VelocityReachedSignal),
-		dc_velocity/DC_VELOCITY_MULTIPLIER
-	};
+	VelocityReachedSignal vrs;
+	com_make_default_header(&vrs, com_brick_uid, sizeof(VelocityReachedSignal), FID_VELOCITY_REACHED);
+	vrs.velocity = dc_velocity/DC_VELOCITY_MULTIPLIER;
 
 	send_blocking_with_timeout(&vrs,
 	                           sizeof(VelocityReachedSignal),
@@ -267,12 +277,9 @@ void dc_check_error_signals(void) {
 		 stack_voltage > DC_VOLTAGE_EPSILON &&
 		 stack_voltage < dc_minimum_voltage))) {
 
-		UnderVoltageSignal uvs = {
-				com_stack_id,
-				TYPE_UNDER_VOLTAGE,
-				sizeof(UnderVoltageSignal),
-				external_voltage < DC_VOLTAGE_EPSILON ? stack_voltage : external_voltage
-		};
+		UnderVoltageSignal uvs;
+		com_make_default_header(&uvs, com_brick_uid, sizeof(UnderVoltageSignal), FID_UNDER_VOLTAGE);
+		uvs.voltage = external_voltage < DC_VOLTAGE_EPSILON ? stack_voltage : external_voltage;
 
 		send_blocking_with_timeout(&uvs,
 		                           sizeof(UnderVoltageSignal),
@@ -288,11 +295,8 @@ void dc_check_error_signals(void) {
 		dc_emergency_shutdown_counter++;
 		// Wait for DC_MAX_EMERGENCY_SHUTDOWN ms until signal is emitted
 		if(dc_emergency_shutdown_counter >= DC_MAX_EMERGENCY_SHUTDOWN) {
-			EmergencyShutdownSignal ess = {
-				com_stack_id,
-				TYPE_EMERGENCY_SHUTDOWN,
-				sizeof(EmergencyShutdownSignal),
-			};
+			EmergencyShutdownSignal ess;
+			com_make_default_header(&ess, com_brick_uid, sizeof(EmergencyShutdownSignal), FID_EMERGENCY_SHUTDOWN);
 
 			send_blocking_with_timeout(&ess,
 									   sizeof(EmergencyShutdownSignal),
@@ -327,7 +331,7 @@ void dc_full_brake(void) {
 	}
 }
 
-void dc_set_mode(uint8_t mode) {
+void dc_set_mode(const uint8_t mode) {
 	if(mode == DC_MODE_DRIVE_BRAKE) {
 		pin_input1.type = PIO_PERIPH_B;
 		pin_input2.type = PIO_PERIPH_B;

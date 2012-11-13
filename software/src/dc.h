@@ -1,5 +1,5 @@
 /* dc-brick
- * Copyright (C) 2011 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2011-2012 Olaf Lüke <olaf@tinkerforge.com>
  *
  * dc.h: Implementation of DC-Brick specific functions
  *
@@ -52,7 +52,7 @@
 #define DC_LED_ERROR_SHUTDOWN 1
 
 void new_connection(void);
-void tick_task(uint8_t tick_type);
+void tick_task(const uint8_t tick_type);
 
 void dc_enable(void);
 void dc_disable(void);
@@ -65,7 +65,7 @@ void dc_check_error_signals(void);
 void dc_update_pwm_frequency(void);
 void dc_current_velocity_signal(void);
 void dc_velocity_reached_signal(void);
-void dc_set_mode(uint8_t mode);
+void dc_set_mode(const uint8_t mode);
 void dc_full_brake(void);
 
 #endif

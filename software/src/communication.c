@@ -1,5 +1,5 @@
 /* dc-brick
- * Copyright (C) 2010-2011 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2010-2012 Olaf Lüke <olaf@tinkerforge.com>
  *
  * communication.c: Implementation of DC-Brick specific messages
  *
@@ -42,164 +42,171 @@ extern uint16_t dc_pwm_frequency;
 extern uint16_t dc_current_velocity_period;
 extern uint8_t dc_mode;
 
-void set_velocity(uint8_t com, const SetVelocity *data) {
+void set_velocity(const ComType com, const SetVelocity *data) {
 	dc_velocity_goal = data->velocity * DC_VELOCITY_MULTIPLIER;
+
+	com_return_setter(com, data);
 }
 
-void get_velocity(uint8_t com, const GetVelocity *data) {
+void get_velocity(const ComType com, const GetVelocity *data) {
 	GetVelocityReturn gvr;
 
-	gvr.stack_address = data->stack_address;
-	gvr.type          = data->type;
-	gvr.length        = sizeof(GetVelocityReturn);
+	gvr.header        = data->header;
+	gvr.header.length = sizeof(GetVelocityReturn);
 	gvr.velocity      = dc_velocity_goal / DC_VELOCITY_MULTIPLIER;
 
 	send_blocking_with_timeout(&gvr, sizeof(GetVelocityReturn), com);
 }
 
-void get_current_velocity(uint8_t com, const GetCurrentVelocity *data) {
+void get_current_velocity(const ComType com, const GetCurrentVelocity *data) {
 	GetCurrentVelocityReturn gcvr;
 
-	gcvr.stack_address = data->stack_address;
-	gcvr.type          = data->type;
-	gcvr.length        = sizeof(GetCurrentVelocityReturn);
+	gcvr.header        = data->header;
+	gcvr.header.length = sizeof(GetCurrentVelocityReturn);
 	gcvr.velocity      = dc_velocity / DC_VELOCITY_MULTIPLIER;
 
 	send_blocking_with_timeout(&gcvr, sizeof(GetCurrentVelocityReturn), com);
 }
 
-void set_acceleration(uint8_t com, const SetAcceleration *data) {
+void set_acceleration(const ComType com, const SetAcceleration *data) {
 	dc_acceleration = data->acceleration;
+
+	com_return_setter(com, data);
 }
 
-void get_acceleration(uint8_t com, const GetAcceleration *data) {
+void get_acceleration(const ComType com, const GetAcceleration *data) {
 	GetAccelerationReturn gar;
 
-	gar.stack_address = data->stack_address;
-	gar.type          = data->type;
-	gar.length        = sizeof(GetAccelerationReturn);
+	gar.header        = data->header;
+	gar.header.length = sizeof(GetAccelerationReturn);
 	gar.acceleration  = dc_acceleration;
 
 	send_blocking_with_timeout(&gar, sizeof(GetAccelerationReturn), com);
 }
 
-void set_pwm_frequency(uint8_t com, const SetPWMFrequency *data) {
+void set_pwm_frequency(const ComType com, const SetPWMFrequency *data) {
 	dc_pwm_frequency = BETWEEN(DC_MIN_PWM_FREQUENCY,
 	                           data->frequency,
 	                           DC_MAX_PWM_FREQUENCY);
 	dc_update_pwm_frequency();
+
+	com_return_setter(com, data);
 }
 
-void get_pwm_frequency(uint8_t com, const GetPWMFrequency *data) {
+void get_pwm_frequency(const ComType com, const GetPWMFrequency *data) {
 	GetPWMFrequencyReturn gpwmfr;
 
-	gpwmfr.stack_address = data->stack_address;
-	gpwmfr.type          = data->type;
-	gpwmfr.length        = sizeof(GetPWMFrequencyReturn);
+	gpwmfr.header        = data->header;
+	gpwmfr.header.length = sizeof(GetPWMFrequencyReturn);
 	gpwmfr.frequency     = dc_pwm_frequency;
 
 	send_blocking_with_timeout(&gpwmfr, sizeof(GetPWMFrequencyReturn), com);
 }
 
 
-void full_brake(uint8_t com, const FullBrake *data) {
+void full_brake(const ComType com, const FullBrake *data) {
 	dc_full_brake();
+
+	com_return_setter(com, data);
 }
 
-void get_stack_input_voltage(uint8_t com, const GetStackInputVoltage *data) {
+void get_stack_input_voltage(const ComType com, const GetStackInputVoltage *data) {
 	GetStackInputVoltageReturn gsivr;
 
-	gsivr.stack_address  = data->stack_address;
-	gsivr.type           = data->type;
-	gsivr.length         = sizeof(GetStackInputVoltageReturn);
+	gsivr.header        = data->header;
+	gsivr.header.length = sizeof(GetStackInputVoltageReturn);
     gsivr.voltage        = dc_get_stack_voltage();
 
 	send_blocking_with_timeout(&gsivr, sizeof(GetStackInputVoltageReturn), com);
 }
 
-void get_external_input_voltage(uint8_t com, const GetExternalInputVoltage *data) {
+void get_external_input_voltage(const ComType com, const GetExternalInputVoltage *data) {
 	GetExternalInputVoltageReturn geivr;
 
-	geivr.stack_address  = data->stack_address;
-	geivr.type           = data->type;
-	geivr.length         = sizeof(GetExternalInputVoltageReturn);
+	geivr.header        = data->header;
+	geivr.header.length = sizeof(GetExternalInputVoltageReturn);
     geivr.voltage        = dc_get_external_voltage();
 
 	send_blocking_with_timeout(&geivr, sizeof(GetExternalInputVoltageReturn), com);
 }
 
-void get_current_consumption(uint8_t com, const GetCurrentConsumption *data) {
+void get_current_consumption(const ComType com, const GetCurrentConsumption *data) {
 	GetCurrentConsumptionReturn gccr;
 
-	gccr.stack_address   = data->stack_address;
-	gccr.type            = data->type;
-	gccr.length          = sizeof(GetCurrentConsumptionReturn);
+	gccr.header          = data->header;
+	gccr.header.length   = sizeof(GetCurrentConsumptionReturn);
     gccr.current         = dc_get_current_consumption();
 
 	send_blocking_with_timeout(&gccr, sizeof(GetCurrentConsumptionReturn), com);
 }
 
-void enable(uint8_t com, const Enable *data) {
+void enable(const ComType com, const Enable *data) {
 	dc_enable();
+
+	com_return_setter(com, data);
 }
 
-void disable(uint8_t com, const Disable *data) {
+void disable(const ComType com, const Disable *data) {
 	dc_disable();
+
+	com_return_setter(com, data);
 }
 
-void is_enabled(uint8_t com, const IsEnabled *data) {
+void is_enabled(const ComType com, const IsEnabled *data) {
 	IsEnabledReturn ier;
 
-	ier.stack_address = data->stack_address;
-	ier.type          = data->type;
-	ier.length        = sizeof(IsEnabledReturn);
+	ier.header        = data->header;
+	ier.header.length = sizeof(IsEnabledReturn);
 	ier.enabled       = dc_enabled;
 
 	send_blocking_with_timeout(&ier, sizeof(IsEnabledReturn), com);
 }
 
-void set_minimum_voltage(uint8_t com, const SetMinimumVoltage *data) {
+void set_minimum_voltage(const ComType com, const SetMinimumVoltage *data) {
 	dc_minimum_voltage = BETWEEN(DC_MINIMUM_VOLTAGE,
 	                             data->voltage,
 	                             DC_MAXIMUM_VOLTAGE);
+
+	com_return_setter(com, data);
 }
 
-void get_minimum_voltage(uint8_t com, const GetMinimumVoltage *data) {
+void get_minimum_voltage(const ComType com, const GetMinimumVoltage *data) {
 	GetMinimumVoltageReturn gmvr;
 
-	gmvr.stack_address = data->stack_address;
-	gmvr.type          = data->type;
-	gmvr.length        = sizeof(GetMinimumVoltageReturn);
+	gmvr.header        = data->header;
+	gmvr.header.length = sizeof(GetMinimumVoltageReturn);
 	gmvr.voltage       = dc_minimum_voltage;
 
 	send_blocking_with_timeout(&gmvr, sizeof(GetMinimumVoltageReturn), com);
 }
 
-void set_drive_mode(uint8_t com, const SetDriveMode *data) {
+void set_drive_mode(const ComType com, const SetDriveMode *data) {
 	dc_set_mode(data->mode);
+
+	com_return_setter(com, data);
 }
 
-void get_drive_mode(uint8_t com, const GetDriveMode *data) {
+void get_drive_mode(const ComType com, const GetDriveMode *data) {
 	GetDriveModeReturn gdmr;
 
-	gdmr.stack_address = data->stack_address;
-	gdmr.type          = data->type;
-	gdmr.length        = sizeof(GetDriveModeReturn);
+	gdmr.header        = data->header;
+	gdmr.header.length = sizeof(GetDriveModeReturn);
 	gdmr.mode          = dc_mode;
 
 	send_blocking_with_timeout(&gdmr, sizeof(GetDriveModeReturn), com);
 }
 
-void set_current_velocity_period(uint8_t com, const SetCurrentVelocityPeriod *data) {
+void set_current_velocity_period(const ComType com, const SetCurrentVelocityPeriod *data) {
 	dc_current_velocity_period = data->period;
+
+	com_return_setter(com, data);
 }
 
-void get_current_velocity_period(uint8_t com, const GetCurrentVelocityPeriod *data) {
+void get_current_velocity_period(const ComType com, const GetCurrentVelocityPeriod *data) {
 	GetCurrentVelocityPeriodReturn gcvpr;
 
-	gcvpr.stack_address = data->stack_address;
-	gcvpr.type          = data->type;
-	gcvpr.length        = sizeof(GetCurrentVelocityPeriodReturn);
+	gcvpr.header        = data->header;
+	gcvpr.header.length = sizeof(GetCurrentVelocityPeriodReturn);
 	gcvpr.period        = dc_current_velocity_period;
 
 	send_blocking_with_timeout(&gcvpr, sizeof(GetCurrentVelocityPeriodReturn), com);

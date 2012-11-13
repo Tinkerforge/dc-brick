@@ -23,9 +23,9 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <pio/pio.h>
-#include <FreeRTOS.h>
-#include <task.h>
+
+#include "bricklib/free_rtos/include/FreeRTOS.h"
+#include "bricklib/free_rtos/include/task.h"
 
 #include "bricklib/com/i2c/i2c_pca9549/i2c_pca9549.h"
 #include "bricklib/com/spi/spi_stack/spi_stack_master.h"
@@ -37,6 +37,7 @@
 #include "bricklib/logging/logging.h"
 #include "bricklib/bricklet/bricklet_init.h"
 #include "bricklib/drivers/uid/uid.h"
+#include "bricklib/drivers/pio/pio.h"
 #include "bricklib/utility/init.h"
 #include "bricklib/utility/profiling.h"
 #include "bricklib/utility/led.h"
@@ -46,9 +47,7 @@
 #include "communication.h"
 #include "dc.h"
 
-#define LED_FLASH_RATE_BASE	333
-
-char brick_hardware_name[] = BRICK_HARDWARE_NAME;
+uint8_t brick_hardware_version[3];
 
 void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName) {
 	logf("Stack Overflow\n\r");
@@ -59,6 +58,10 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName)
 int main() {
 	const Pin pins_stack[] = {PINS_STACK};
 	PIO_Configure(pins_stack, PIO_LISTSIZE(pins_stack));
+
+	brick_hardware_version[0] = BRICK_HARDWARE_VERSION_MAJOR;
+	brick_hardware_version[1] = BRICK_HARDWARE_VERSION_MINOR;
+	brick_hardware_version[2] = BRICK_HARDWARE_VERSION_REVISION;
 
 	brick_init();
 
