@@ -73,8 +73,7 @@ uint8_t dc_tick_calc_counter = 0;
 uint32_t dc_current_sum = 0;
 uint16_t dc_current = 0;
 
-extern ComType com_current;
-extern uint32_t com_brick_uid;
+extern ComInfo com_info;
 
 void tick_task(const uint8_t tick_type) {
 	static int8_t message_counter = 0;
@@ -85,7 +84,7 @@ void tick_task(const uint8_t tick_type) {
 			if(message_counter >= 100) {
 				message_counter = 0;
 				if(brick_init_enumeration(COM_USB)) {
-					com_current = COM_USB;
+					com_info.current = COM_USB;
 					message_counter = -1;
 				}
 			}
@@ -245,22 +244,22 @@ void dc_current_velocity_signal(void) {
 	dc_last_signal_velocity = dc_velocity;
 
 	CurrentVelocitySignal cvs;
-	com_make_default_header(&cvs, com_brick_uid, sizeof(CurrentVelocitySignal), FID_CURRENT_VELOCITY);
+	com_make_default_header(&cvs, com_info.uid, sizeof(CurrentVelocitySignal), FID_CURRENT_VELOCITY);
 	cvs.velocity = dc_velocity/DC_VELOCITY_MULTIPLIER;
 
 	send_blocking_with_timeout(&cvs,
 	                           sizeof(CurrentVelocitySignal),
-	                           com_current);
+	                           com_info.current);
 }
 
 void dc_velocity_reached_signal(void) {
 	VelocityReachedSignal vrs;
-	com_make_default_header(&vrs, com_brick_uid, sizeof(VelocityReachedSignal), FID_VELOCITY_REACHED);
+	com_make_default_header(&vrs, com_info.uid, sizeof(VelocityReachedSignal), FID_VELOCITY_REACHED);
 	vrs.velocity = dc_velocity/DC_VELOCITY_MULTIPLIER;
 
 	send_blocking_with_timeout(&vrs,
 	                           sizeof(VelocityReachedSignal),
-	                           com_current);
+	                           com_info.current);
 }
 
 void dc_check_error_signals(void) {
@@ -278,12 +277,12 @@ void dc_check_error_signals(void) {
 		 stack_voltage < dc_minimum_voltage))) {
 
 		UnderVoltageSignal uvs;
-		com_make_default_header(&uvs, com_brick_uid, sizeof(UnderVoltageSignal), FID_UNDER_VOLTAGE);
+		com_make_default_header(&uvs, com_info.uid, sizeof(UnderVoltageSignal), FID_UNDER_VOLTAGE);
 		uvs.voltage = external_voltage < DC_VOLTAGE_EPSILON ? stack_voltage : external_voltage;
 
 		send_blocking_with_timeout(&uvs,
 		                           sizeof(UnderVoltageSignal),
-		                           com_current);
+		                           com_info.current);
 
 		led_on(LED_STD_RED);
 	// If there is no under voltage, we are currently enabled and the
@@ -296,11 +295,11 @@ void dc_check_error_signals(void) {
 		// Wait for DC_MAX_EMERGENCY_SHUTDOWN ms until signal is emitted
 		if(dc_emergency_shutdown_counter >= DC_MAX_EMERGENCY_SHUTDOWN) {
 			EmergencyShutdownSignal ess;
-			com_make_default_header(&ess, com_brick_uid, sizeof(EmergencyShutdownSignal), FID_EMERGENCY_SHUTDOWN);
+			com_make_default_header(&ess, com_info.uid, sizeof(EmergencyShutdownSignal), FID_EMERGENCY_SHUTDOWN);
 
 			send_blocking_with_timeout(&ess,
 									   sizeof(EmergencyShutdownSignal),
-									   com_current);
+									   com_info.current);
 
 			dc_disable();
 			dc_emergency_shutdown_counter = 0;
