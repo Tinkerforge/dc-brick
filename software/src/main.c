@@ -47,6 +47,7 @@
 #include "communication.h"
 #include "dc.h"
 
+extern bool usb_first_connection;
 uint8_t brick_hardware_version[3];
 
 void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName) {
@@ -80,6 +81,7 @@ int main() {
     				1,
     				(xTaskHandle *)NULL);
     } else {
+    	usb_first_connection = false;
     	logi("Configure as Stack Participant (SPI)\n\r");
         spi_stack_slave_init();
 
