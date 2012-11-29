@@ -12,7 +12,7 @@ type
     ipcon: TIPConnection;
     dc: TBrickDC;
   public
-    procedure ReachedCB(const velocity: smallint);
+    procedure ReachedCB(sender: TObject; const velocity: smallint);
     procedure Execute;
   end;
 
@@ -25,7 +25,7 @@ var
   e: TExample;
 
 { Use velocity reached callback to swing back and forth }
-procedure TExample.ReachedCB(const velocity: smallint);
+procedure TExample.ReachedCB(sender: TObject; const velocity: smallint);
 begin
   if (velocity = 32767) then begin
     WriteLn('Velocity: Full Speed forward, turning backward');
@@ -42,15 +42,15 @@ end;
 
 procedure TExample.Execute;
 begin
-  { Create IP connection to brickd }
-  ipcon := TIPConnection.Create(HOST, PORT);
+  { Create IP connection }
+  ipcon := TIPConnection.Create();
 
   { Create device object }
-  dc := TBrickDC.Create(UID);
+  dc := TBrickDC.Create(UID, ipcon);
 
-  { Add device to IP connection }
-  ipcon.AddDevice(dc);
-  { Don't use device before it is added to a connection }
+  { Connect to brickd }
+  ipcon.Connect(HOST, PORT);
+  { Don't use device before ipcon is connected }
 
   { Register "velocity reached callback" to procedure ReachedCB.
     ReachedCB will be called every time a velocity set with
@@ -66,7 +66,6 @@ begin
 
   WriteLn('Press key to exit');
   ReadLn;
-  ipcon.Destroy;
 end;
 
 begin
