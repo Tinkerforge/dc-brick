@@ -10,11 +10,11 @@ $host = 'localhost';
 $port = 4223;
 $uid = 'a4GePuz3m29'; // Change to your UID
 
-$ipcon = new IPConnection($host, $port); // Create IP connection to brickd
-$dc = new BrickDC($uid); // Create device object
+$ipcon = new IPConnection(); // Create IP connection
+$dc = new BrickDC($uid, $ipcon); // Create device object
 
-$ipcon->addDevice($dc); // Add device to IP connection
-// Don't use device before it is added to a connection
+$ipcon->connect($host, $port); // Connect to brickd
+// Don't use device before ipcon is connected
 
 $dc->setPWMFrequency(10000); // Use PWM frequency of 10khz
 $dc->setDriveMode(1); // Use 1 = Drive/Coast instead of 0 = Drive/Brake
@@ -25,6 +25,5 @@ $dc->setVelocity(32767); // Full speed forward
 
 echo "Press key to exit\n";
 fgetc(fopen('php://stdin', 'r'));
-$ipcon->destroy();
 
 ?>

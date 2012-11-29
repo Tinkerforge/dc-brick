@@ -27,11 +27,11 @@ function cb_reached($velocity)
     }
 }
 
-$ipcon = new IPConnection($host, $port); // Create IP connection to brickd
-$dc = new BrickDC($uid); // Create device object
+$ipcon = new IPConnection(); // Create IP connection
+$dc = new BrickDC($uid, $ipcon); // Create device object
 
-$ipcon->addDevice($dc); // Add device to IP connection
-// Don't use device before it is added to a connection
+$ipcon->connect($host, $port); // Connect to brickd
+// Don't use device before ipcon is connected
 
 // Register "velocity reached callback" to cb_reached
 // cb_reached will be called every time a velocity set with
