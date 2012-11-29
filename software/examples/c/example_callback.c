@@ -8,43 +8,43 @@
 #define PORT 4223
 #define UID "apaYPikNHEj" // Change to your UID
 
-DC dc;
-
 // Use velocity reached callback to swing back and forth
-void cb_reached(int16_t velocity) {
+void cb_reached(int16_t velocity, void *user_data) {
+	DC *dc = (DC*)user_data;
 	if(velocity == 32767) {
 		printf("Velocity: Full Speed forward, turning backward\n");
-		dc_set_velocity(&dc, -32767);
+		dc_set_velocity(dc, -32767);
 	} else if(velocity == -32767) {
 		printf("Velocity: Full Speed backward, turning forward\n");
-		dc_set_velocity(&dc, 32767);
+		dc_set_velocity(dc, 32767);
 	} else {
 		printf("Error\n"); // Can only happen if another program sets velocity
 	}
 }
 
 int main() {
-	// Create IP connection to brickd
+	// Create IP connection
 	IPConnection ipcon;
-	if(ipcon_create(&ipcon, HOST, PORT) < 0) {
-		fprintf(stderr, "Could not create connection\n");
-		exit(1);
-	}
+	ipcon_create(&ipcon);
 
 	// Create device object
-	dc_create(&dc, UID); 
+	DC dc;
+	dc_create(&dc, UID, &ipcon); 
 
-	// Add device to IP connection
-	if(ipcon_add_device(&ipcon, &dc) < 0) {
-		fprintf(stderr, "Could not connect to Brick\n");
+	// Connect to brickd
+	if(ipcon_connect(&ipcon, HOST, PORT) < 0) {
+		fprintf(stderr, "Could not connect\n");
 		exit(1);
 	}
-	// Don't use device before it is added to a connection
+	// Don't use device before ipcon is connected
 
 	// Register "velocity reached callback" to cb_reached
 	// cb_reached will be called every time a velocity set with
 	// set_velocity is reached
-	dc_register_callback(&dc, DC_CALLBACK_VELOCITY_REACHED, cb_reached);
+	dc_register_callback(&dc, 
+	                     DC_CALLBACK_VELOCITY_REACHED, 
+						 cb_reached,
+						 (void*)&dc);
 
 	dc_enable(&dc);
 

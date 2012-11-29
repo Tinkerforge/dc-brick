@@ -9,23 +9,20 @@
 #define UID "apaYPikNHEj" // Change to your UID
 
 int main() {
-	// Create IP connection to brickd
+	// Create IP connection
 	IPConnection ipcon;
-	if(ipcon_create(&ipcon, HOST, PORT) < 0) {
-		fprintf(stderr, "Could not create connection\n");
-		exit(1);
-	}
+	ipcon_create(&ipcon);
 
 	// Create device object
 	DC dc;
-	dc_create(&dc, UID); 
+	dc_create(&dc, UID, &ipcon); 
 
-	// Add device to IP connection
-	if(ipcon_add_device(&ipcon, &dc) < 0) {
-		fprintf(stderr, "Could not connect to Brick\n");
+	// Connect to brickd
+	if(ipcon_connect(&ipcon, HOST, PORT) < 0) {
+		fprintf(stderr, "Could not connect\n");
 		exit(1);
 	}
-	// Don't use device before it is added to a connection
+	// Don't use device before ipcon is connected
 
 	dc_set_pwm_frequency(&dc, 10000); // Use PWM frequency of 10khz
 	dc_set_drive_mode(&dc, 1); // Use 1 = Drive/Coast instead of 0 = Drive/Brake
