@@ -8,7 +8,8 @@ UID = "apaYPikNHEj" # Change to your UID
 from tinkerforge.ip_connection import IPConnection
 from tinkerforge.brick_dc import DC
 
-dc = DC(UID) # Create device object
+ipcon = IPConnection() # Create IP connection
+dc = DC(UID, ipcon) # Create device object
 
 # Use velocity reached callback to swing back and forth between
 # full speed forward and full speed backward
@@ -23,10 +24,8 @@ def cb_reached(velocity):
         print('Error') # Can only happen if another program sets velocity
 
 if __name__ == "__main__":
-    ipcon = IPConnection(HOST, PORT) # Create IP connection to brickd
-
-    ipcon.add_device(dc) # Add device to IP connection
-    # Don't use device before it is added to a connection
+    ipcon.connect(HOST, PORT) # Connect to brickd
+    # Don't use device before ipcon is connected
 
     # Register "velocity reached callback" to cb_reached
     # cb_reached will be called every time a velocity set with
@@ -40,4 +39,3 @@ if __name__ == "__main__":
     dc.set_velocity(32767) # Full speed forward
 
     raw_input('Press key to exit\n') # Use input() in Python 3
-    ipcon.destroy()

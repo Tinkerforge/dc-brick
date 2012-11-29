@@ -9,11 +9,11 @@ from tinkerforge.ip_connection import IPConnection
 from tinkerforge.brick_dc import DC
 
 if __name__ == "__main__":
-    ipcon = IPConnection(HOST, PORT) # Create IP connection to brickd
+    ipcon = IPConnection() # Create IP connection
+    dc = DC(UID, ipcon) # Create device object
 
-    dc = DC(UID) # Create device object
-    ipcon.add_device(dc) # Add device to IP connection
-    # Don't use device before it is added to a connection
+    ipcon.connect(HOST, PORT) # Connect to brickd
+    # Don't use device before ipcon is connected
 
     dc.set_pwm_frequency(10000) # Use PWM frequency of 10khz
     dc.set_drive_mode(1) # Use 1 = Drive/Coast instead of 0 = Drive/Brake
@@ -23,4 +23,3 @@ if __name__ == "__main__":
     dc.set_velocity(32767) # Full speed forward
 
     raw_input('Press key to exit\n') # Use input() in Python 3
-    ipcon.destroy()
