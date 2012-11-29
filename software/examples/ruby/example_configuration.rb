@@ -10,10 +10,11 @@ HOST = 'localhost'
 PORT = 4223
 UID = 'a4GePuz3m29' # Change to your UID
 
-ipcon = IPConnection.new HOST, PORT # Create IP connection to brickd
-dc = BrickDC.new UID # Create device object
-ipcon.add_device dc # Add device to IP connection
-# Don't use device before it is added to a connection
+ipcon = IPConnection.new # Create IP connection
+dc = BrickDC.new UID, ipcon # Create device object
+
+ipcon.connect HOST, PORT # Connect to brickd
+# Don't use device before ipcon is connected
 
 dc.set_pwm_frequency 10000 # Use PWM frequency of 10khz
 dc.set_drive_mode 1 # Use 1 = Drive/Coast instead of 0 = Drive/Brake
@@ -24,4 +25,3 @@ dc.set_velocity 32767 # Full speed forward
 
 puts 'Press key to exit'
 $stdin.gets
-ipcon.destroy
