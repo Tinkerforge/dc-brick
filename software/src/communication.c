@@ -181,6 +181,11 @@ void get_minimum_voltage(const ComType com, const GetMinimumVoltage *data) {
 }
 
 void set_drive_mode(const ComType com, const SetDriveMode *data) {
+	if (data->mode != DC_MODE_DRIVE_BRAKE && data->mode != DC_MODE_DRIVE_COAST) {
+		com_return_error(data, sizeof(MessageHeader), MESSAGE_ERROR_CODE_INVALID_PARAMETER, com);
+		return;
+	}
+
 	dc_set_mode(data->mode);
 
 	com_return_setter(com, data);
