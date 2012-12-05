@@ -6,12 +6,13 @@ class Example
 	private static int PORT = 4223;
 	private static string UID = "aetiNB3mX2u"; // Change to your UID
 
-	private static BrickDC dc;
 
 	// Use velocity reached callback to swing back and forth between
 	// full speed forward and full speed backward
-	static void ReachedCB(short velocity)
+	static void ReachedCB(object sender, short velocity)
 	{
+		BrickDC dc = (BrickDC)sender;
+
 		if(velocity == 32767)
 		{
 			System.Console.WriteLine("Velocity: Full Speed forward, turning backward");
@@ -31,15 +32,16 @@ class Example
 
 	static void Main() 
 	{
-		IPConnection ipcon = new IPConnection(HOST, PORT); // Create connection to brickd
-		dc = new BrickDC(UID); // Create device object
-		ipcon.AddDevice(dc); // Add device to IP connection
-		// Don't use device before it is added to a connection
+		IPConnection ipcon = new IPConnection(); // Create IP connection
+		BrickDC dc = new BrickDC(UID, ipcon); // Create device object
+
+		ipcon.Connect(HOST, PORT); // Connect to brickd
+		// Don't use device before ipcon is connected
 
 		// Register "velocity reached callback" to ReachedCB
 		// cb_reached will be called every time a velocity set with
 		// set_velocity is reached
-		dc.RegisterCallback(new BrickDC.VelocityReached(ReachedCB));
+		dc.VelocityReached += ReachedCB;
 
 		dc.Enable();
 		// The acceleration has to be smaller or equal to the maximum acceleration
@@ -49,6 +51,5 @@ class Example
 
 		System.Console.WriteLine("Press key to exit");
 		System.Console.ReadKey();
-		ipcon.Destroy();
 	}
 }
