@@ -10,7 +10,8 @@
 
 // Use velocity reached callback to swing back and forth
 void cb_reached(int16_t velocity, void *user_data) {
-	DC *dc = (DC*)user_data;
+	DC *dc = (DC *)user_data;
+
 	if(velocity == 32767) {
 		printf("Velocity: Full Speed forward, turning backward\n");
 		dc_set_velocity(dc, -32767);
@@ -43,8 +44,8 @@ int main() {
 	// set_velocity is reached
 	dc_register_callback(&dc, 
 	                     DC_CALLBACK_VELOCITY_REACHED, 
-						 cb_reached,
-						 (void*)&dc);
+	                     cb_reached,
+	                     &dc);
 
 	dc_enable(&dc);
 
