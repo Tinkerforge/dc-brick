@@ -26,10 +26,16 @@ public class ExampleCallback {
 			public void velocityReached(short velocity) {
 				if(velocity == 32767) {
 					System.out.println("Velocity: Full Speed forward, turning backward");
-					ExampleCallback.dc.setVelocity((short)-32767);
+					try {
+						ExampleCallback.dc.setVelocity((short)-32767);
+					} catch(IPConnection.TimeoutException e) {
+					}
 				} else if(velocity == -32767) {
 					System.out.println("Velocity: Full Speed backward, turning forward");
-					ExampleCallback.dc.setVelocity((short)32767);
+					try {
+						ExampleCallback.dc.setVelocity((short)32767);
+					} catch(IPConnection.TimeoutException e) {
+					}
 				} else {
 					System.out.println("Error"); // Can only happen if another program sets velocity
 				}
