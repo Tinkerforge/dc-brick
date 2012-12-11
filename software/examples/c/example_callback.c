@@ -44,7 +44,7 @@ int main() {
 	// set_velocity is reached
 	dc_register_callback(&dc, 
 	                     DC_CALLBACK_VELOCITY_REACHED, 
-	                     cb_reached,
+	                     (void *)cb_reached,
 	                     &dc);
 
 	dc_enable(&dc);
