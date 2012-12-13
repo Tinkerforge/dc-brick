@@ -12,9 +12,9 @@ $uid = 'a4GePuz3m29'; // Change to your UID
 
 // Use velocity reached callback to swing back and forth between
 // full speed forward and full speed backward
-function cb_reached($velocity)
+function cb_reached($velocity, $userData)
 {
-    global $dc;
+    $dc = $userData;
 
     if ($velocity == 32767) {
         echo "Velocity: Full Speed forward, turning backward\n";
@@ -36,7 +36,7 @@ $ipcon->connect($host, $port); // Connect to brickd
 // Register "velocity reached callback" to cb_reached
 // cb_reached will be called every time a velocity set with
 // set_velocity is reached
-$dc->registerCallback(BrickDC::CALLBACK_VELOCITY_REACHED, 'cb_reached');
+$dc->registerCallback(BrickDC::CALLBACK_VELOCITY_REACHED, 'cb_reached', $dc);
 
 $dc->enable();
 // The acceleration has to be smaller or equal to the maximum acceleration
