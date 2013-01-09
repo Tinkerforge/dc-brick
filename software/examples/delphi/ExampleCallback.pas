@@ -12,7 +12,7 @@ type
     ipcon: TIPConnection;
     dc: TBrickDC;
   public
-    procedure ReachedCB(sender: TObject; const velocity: smallint);
+    procedure ReachedCB(sender: TBrickDC; const velocity: smallint);
     procedure Execute;
   end;
 
@@ -25,15 +25,15 @@ var
   e: TExample;
 
 { Use velocity reached callback to swing back and forth }
-procedure TExample.ReachedCB(sender: TObject; const velocity: smallint);
+procedure TExample.ReachedCB(sender: TBrickDC; const velocity: smallint);
 begin
   if (velocity = 32767) then begin
     WriteLn('Velocity: Full Speed forward, turning backward');
-    dc.SetVelocity(-32767);
+    sender.SetVelocity(-32767);
   end
   else if (velocity = -32767) then begin
     WriteLn('Velocity: Full Speed backward, turning forward');
-    dc.SetVelocity(32767);
+    sender.SetVelocity(32767);
   end
   else begin
     WriteLn('Error'); { Can only happen if another program sets velocity }

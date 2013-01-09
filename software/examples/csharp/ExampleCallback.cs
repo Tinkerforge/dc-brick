@@ -9,19 +9,17 @@ class Example
 
 	// Use velocity reached callback to swing back and forth between
 	// full speed forward and full speed backward
-	static void ReachedCB(object sender, short velocity)
+	static void ReachedCB(BrickDC sender, short velocity)
 	{
-		BrickDC dc = (BrickDC)sender;
-
 		if(velocity == 32767)
 		{
 			System.Console.WriteLine("Velocity: Full Speed forward, turning backward");
-			dc.SetVelocity(-32767);
+			sender.SetVelocity(-32767);
 		}
 		else if(velocity == -32767)
 		{
 			System.Console.WriteLine("Velocity: Full Speed backward, turning forward");
-			dc.SetVelocity(32767);
+			sender.SetVelocity(32767);
 		}
 		else
 		{
