@@ -29,12 +29,14 @@ public class ExampleCallback {
 					try {
 						ExampleCallback.dc.setVelocity((short)-32767);
 					} catch(IPConnection.TimeoutException e) {
+					} catch(IPConnection.NotConnectedException e) {
 					}
 				} else if(velocity == -32767) {
 					System.out.println("Velocity: Full Speed backward, turning forward");
 					try {
 						ExampleCallback.dc.setVelocity((short)32767);
 					} catch(IPConnection.TimeoutException e) {
+					} catch(IPConnection.NotConnectedException e) {
 					}
 				} else {
 					System.out.println("Error"); // Can only happen if another program sets velocity
