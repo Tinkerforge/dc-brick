@@ -20,7 +20,7 @@ public class ExampleCallback {
 
 		// Add and implement velocity reached listener 
 		// (called if velocity set by setVelocity is reached)
-		dc.addListener(new BrickDC.VelocityReachedListener() {
+		dc.addVelocityReachedListener(new BrickDC.VelocityReachedListener() {
 			public void velocityReached(short velocity) {
 				if(velocity == 32767) {
 					System.out.println("Velocity: Full Speed forward, turning backward");
