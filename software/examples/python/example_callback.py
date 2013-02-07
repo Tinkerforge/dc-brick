@@ -39,3 +39,4 @@ if __name__ == "__main__":
     dc.set_velocity(32767) # Full speed forward
 
     raw_input('Press key to exit\n') # Use input() in Python 3
+    ipcon.disconnect()
