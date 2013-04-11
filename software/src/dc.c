@@ -29,6 +29,7 @@
 #include "bricklib/logging/logging.h"
 #include "bricklib/bricklet/bricklet_init.h"
 #include "bricklib/drivers/dacc/dacc.h"
+#include "bricklib/drivers/tc/tc.h"
 #include "bricklib/drivers/adc/adc.h"
 #include "bricklib/drivers/pio/pio.h"
 #include "bricklib/drivers/usart/usart.h"
@@ -37,6 +38,11 @@
 #include "bricklib/utility/util_definitions.h"
 #include "bricklib/utility/led.h"
 #include "bricklib/utility/init.h"
+
+#ifdef ENCODER
+#include "bricklib/utility/pid.h"
+#endif
+
 #include <stdio.h>
 
 Pin pin_input1 = PIN_INPUT1;
@@ -65,7 +71,7 @@ uint8_t dc_mode = DC_MODE_DRIVE_BRAKE;
 bool dc_velocity_reached = false;
 bool dc_current_velocity = false;
 
-int32_t dc_last_signal_velocity = 0;
+int32_t dc_last_callback_velocity = 0;
 
 uint8_t dc_led_error_reason = 0;
 
@@ -75,6 +81,82 @@ uint16_t dc_current = 0;
 
 extern ComInfo com_info;
 extern bool usb_first_connection;
+
+#ifdef ENCODER
+int8_t encoder_table[4][4]={{ 0,  1, -1,  0},
+                            {-1,  0,  0,  1},
+                            { 1,  0,  0, -1},
+                            { 0, -1,  1,  0}};
+int32_t encoder_count = 0;
+int32_t encoder_count_last = 0;
+uint8_t encoder_value_last = 0;
+
+bool encoder_enabled = false;
+int32_t encoder_count_external = 0;
+uint16_t encoder_counts_per_revolution = 400;
+
+Pin pin_encoder_a = BRICKLET_A_PIN_1_AD;
+Pin pin_encoder_b = BRICKLET_A_PIN_2_DA;
+
+PID pid;
+int32_t pid_velocity;
+
+
+void TC0_IrqHandler(void) {
+	// acknowledge interrupt
+	tc_channel_interrupt_ack(&ENCODER_TC_CHANNEL);
+
+	if(led_is_on(LED_STD_RED)) {
+		led_off(LED_STD_RED);
+	} else {
+		led_on(LED_STD_RED);
+	}
+
+	uint8_t encoder_value = PIO_Get(&pin_encoder_a);
+	encoder_value |= (PIO_Get(&pin_encoder_b) << 1);
+
+	int8_t add = encoder_table[encoder_value_last][encoder_value];
+	encoder_count += add;
+	encoder_count_external += add;
+	encoder_value_last = encoder_value;
+}
+
+void encoder_init(void) {
+	PIO_Configure(&pin_encoder_a, 1);
+	PIO_Configure(&pin_encoder_b, 1);
+
+    // Enable peripheral clock for TC
+    PMC->PMC_PCER0 = 1 << ID_TC0;
+
+    // Configure and enable TC interrupts
+	NVIC_DisableIRQ(TC0_IRQn);
+	NVIC_ClearPendingIRQ(TC0_IRQn);
+	NVIC_SetPriority(TC0_IRQn, PRIORITY_ENCODER_TC0);
+	NVIC_EnableIRQ(TC0_IRQn);
+
+	tc_channel_init(&ENCODER_TC_CHANNEL,
+	                TC_CMR_TCCLKS_TIMER_CLOCK4 | TC_CMR_CPCTRG);
+
+    // Interrupt in compare
+    tc_channel_interrupt_set(&ENCODER_TC_CHANNEL, TC_IER_CPCS);
+
+    ENCODER_COUNTER = 25;
+}
+
+bool encoder_tick(void) {
+	static uint32_t encoder_tick_count = 0;
+
+	encoder_tick_count++;
+	if((encoder_tick_count % pid.sample_time) == 0) {
+		encoder_count_last = encoder_count;
+		encoder_count = 0;
+		//printf("rpm: %d\n\r", encoder_count_last);
+
+		return true;
+	}
+	return false;
+}
+#endif
 
 void tick_task(const uint8_t tick_type) {
 	static int8_t message_counter = 0;
@@ -91,10 +173,6 @@ void tick_task(const uint8_t tick_type) {
 				}
 			}
 		}
-	}
-
-	if(!dc_enabled) {
-		return;
 	}
 
 	if(tick_type == TICK_TASK_TYPE_CALCULATION) {
@@ -115,15 +193,21 @@ void tick_task(const uint8_t tick_type) {
 			PIO_Clear(&pin_voltage_switch);
 		}
 
-		// Emit current velocity signal if necessary
+		if(!dc_enabled) {
+			return;
+		}
+
+		// Emit current velocity callback if necessary
 		if((dc_current_velocity_period != 0) &&
 		   ((dc_tick_counter % dc_current_velocity_period) == 0)) {
 			dc_current_velocity = true;
 		}
 
-		if(dc_velocity_goal == dc_velocity) {
-			return;
-		}
+		//if(!encoder_enabled) {
+			if(dc_velocity_goal == dc_velocity) {
+				return;
+			}
+		//}
 
 		if(dc_acceleration == 0) {
 			dc_velocity = dc_velocity_goal;
@@ -137,11 +221,25 @@ void tick_task(const uint8_t tick_type) {
 			}
 		}
 
+
+#ifdef ENCODER
+		if(encoder_enabled) {
+			if(encoder_tick()) {
+				float setpoint = (dc_velocity/DC_VELOCITY_MULTIPLIER)*encoder_counts_per_revolution*pid.sample_time/(1000*60);
+				float out;
+				if(pid_compute(&pid, setpoint, (float)ABS(encoder_count_last), &out)) {
+					pid_velocity = (int32_t)out;
+		//			pid_print(&pid);
+				}
+			}
+		}
+#endif
+
 		// Set new velocity
 		dc_velocity_to_pwm();
 
-		// Emit velocity reachead signal
-		if(dc_velocity_goal == dc_velocity) {
+		// Emit velocity reachead callback
+		if(dc_velocity_goal == dc_velocity /*&& !encoder_enabled*/) {
 			dc_velocity_reached = true;
 		}
 	} else if(tick_type == TICK_TASK_TYPE_MESSAGE) {
@@ -149,15 +247,15 @@ void tick_task(const uint8_t tick_type) {
 
 		if(dc_velocity_reached) {
 			dc_velocity_reached = false;
-			dc_velocity_reached_signal();
+			dc_velocity_reached_callback();
 		}
 
 		if(dc_current_velocity) {
 			dc_current_velocity = false;
-			dc_current_velocity_signal();
+			dc_current_velocity_callback();
 		}
 
-		dc_check_error_signals();
+		dc_check_error_callbacks();
 	}
 }
 
@@ -217,6 +315,18 @@ void dc_disable(void) {
 }
 
 void dc_init(void) {
+#ifdef ENCODER
+	pid_init(&pid,
+	         PID_K_P_DEFAULT,
+	         PID_K_I_DEFAULT,
+	         PID_K_D_DEFAULT,
+	         PID_SAMPLE_TIME_DEFAULT,
+	         PID_MAX_OUT_DEFAULT,
+	         PID_MIN_OUT_DEFAULT);
+
+	encoder_init();
+#endif
+
 	Pin dc_pins[] = {PINS_DC};
 	PIO_Configure(dc_pins, PIO_LISTSIZE(dc_pins));
 
@@ -237,34 +347,34 @@ void dc_init(void) {
 	adc_channel_enable(CURRENT_CONSUMPTION_CHANNEL);
 }
 
-void dc_current_velocity_signal(void) {
-	// Only emit signal if velocity has changed since last signal
-	if(dc_last_signal_velocity == dc_velocity) {
+void dc_current_velocity_callback(void) {
+	// Only emit callback if velocity has changed since last callback
+	if(dc_last_callback_velocity == dc_velocity /*&& !encoder_enabled*/) {
 		return;
 	}
 
-	dc_last_signal_velocity = dc_velocity;
+	dc_last_callback_velocity = dc_velocity;
 
-	CurrentVelocitySignal cvs;
-	com_make_default_header(&cvs, com_info.uid, sizeof(CurrentVelocitySignal), FID_CURRENT_VELOCITY);
+	CurrentVelocityCallback cvs;
+	com_make_default_header(&cvs, com_info.uid, sizeof(CurrentVelocityCallback), FID_CURRENT_VELOCITY);
 	cvs.velocity = dc_velocity/DC_VELOCITY_MULTIPLIER;
 
 	send_blocking_with_timeout(&cvs,
-	                           sizeof(CurrentVelocitySignal),
+	                           sizeof(CurrentVelocityCallback),
 	                           com_info.current);
 }
 
-void dc_velocity_reached_signal(void) {
-	VelocityReachedSignal vrs;
-	com_make_default_header(&vrs, com_info.uid, sizeof(VelocityReachedSignal), FID_VELOCITY_REACHED);
+void dc_velocity_reached_callback(void) {
+	VelocityReachedCallback vrs;
+	com_make_default_header(&vrs, com_info.uid, sizeof(VelocityReachedCallback), FID_VELOCITY_REACHED);
 	vrs.velocity = dc_velocity/DC_VELOCITY_MULTIPLIER;
 
 	send_blocking_with_timeout(&vrs,
-	                           sizeof(VelocityReachedSignal),
+	                           sizeof(VelocityReachedCallback),
 	                           com_info.current);
 }
 
-void dc_check_error_signals(void) {
+void dc_check_error_callbacks(void) {
 	const uint16_t external_voltage = dc_get_external_voltage();
 	const uint16_t stack_voltage    = dc_get_stack_voltage();
 
@@ -278,12 +388,12 @@ void dc_check_error_signals(void) {
 		 stack_voltage > DC_VOLTAGE_EPSILON &&
 		 stack_voltage < dc_minimum_voltage))) {
 
-		UnderVoltageSignal uvs;
-		com_make_default_header(&uvs, com_info.uid, sizeof(UnderVoltageSignal), FID_UNDER_VOLTAGE);
+		UnderVoltageCallback uvs;
+		com_make_default_header(&uvs, com_info.uid, sizeof(UnderVoltageCallback), FID_UNDER_VOLTAGE);
 		uvs.voltage = external_voltage < DC_VOLTAGE_EPSILON ? stack_voltage : external_voltage;
 
 		send_blocking_with_timeout(&uvs,
-		                           sizeof(UnderVoltageSignal),
+		                           sizeof(UnderVoltageCallback),
 		                           com_info.current);
 
 		led_on(LED_STD_RED);
@@ -294,13 +404,13 @@ void dc_check_error_signals(void) {
 	          dc_enabled &&
 	          dc_mode == DC_MODE_DRIVE_BRAKE) {
 		dc_emergency_shutdown_counter++;
-		// Wait for DC_MAX_EMERGENCY_SHUTDOWN ms until signal is emitted
+		// Wait for DC_MAX_EMERGENCY_SHUTDOWN ms until callback is emitted
 		if(dc_emergency_shutdown_counter >= DC_MAX_EMERGENCY_SHUTDOWN) {
-			EmergencyShutdownSignal ess;
-			com_make_default_header(&ess, com_info.uid, sizeof(EmergencyShutdownSignal), FID_EMERGENCY_SHUTDOWN);
+			EmergencyShutdownCallback ess;
+			com_make_default_header(&ess, com_info.uid, sizeof(EmergencyShutdownCallback), FID_EMERGENCY_SHUTDOWN);
 
 			send_blocking_with_timeout(&ess,
-									   sizeof(EmergencyShutdownSignal),
+									   sizeof(EmergencyShutdownCallback),
 									   com_info.current);
 
 			dc_disable();
@@ -355,8 +465,20 @@ void dc_set_mode(const uint8_t mode) {
 }
 
 void dc_velocity_to_pwm(void) {
+#ifdef ENCODER
+	int32_t vel;
+
+	if(encoder_enabled) {
+		vel = pid_velocity;
+	} else {
+		vel = dc_velocity/DC_VELOCITY_MULTIPLIER;
+	}
+#endif
+
+	int32_t vel = dc_velocity/DC_VELOCITY_MULTIPLIER;
+
 	// Calculate duty cycle according to pwm frequency
-	uint16_t duty = SCALE(ABS(dc_velocity/DC_VELOCITY_MULTIPLIER),
+	uint16_t duty = SCALE(ABS(vel),
 	                      0, DC_VELOCITY_MAX,
 	                      0, dc_pwm_scale_value);
 

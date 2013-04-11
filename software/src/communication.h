@@ -53,6 +53,17 @@
 #define FID_VELOCITY_REACHED 23
 #define FID_CURRENT_VELOCITY 24
 
+#ifdef ENCODER
+#define FID_ENABLE_ENCODER 25
+#define FID_DISABLE_ENCODER 26
+#define FID_IS_ENCODER_ENABLED 27
+#define FID_GET_ENCODER_COUNT 28
+#define FID_SET_ENCODER_CONFIG 29
+#define FID_GET_ENCODER_CONFIG 30
+#define FID_SET_ENCODER_PID_CONFIG 31
+#define FID_GET_ENCODER_PID_CONFIG 32
+#endif
+
 #define COM_MESSAGES_USER \
 	{FID_SET_VELOCITY, (message_handler_func_t)set_velocity}, \
 	{FID_GET_VELOCITY, (message_handler_func_t)get_velocity}, \
@@ -73,7 +84,22 @@
 	{FID_SET_DRIVE_MODE, (message_handler_func_t)set_drive_mode}, \
 	{FID_GET_DRIVE_MODE, (message_handler_func_t)get_drive_mode}, \
 	{FID_SET_CURRENT_VELOCITY_PERIOD, (message_handler_func_t)set_current_velocity_period}, \
-	{FID_GET_CURRENT_VELOCITY_PERIOD, (message_handler_func_t)get_current_velocity_period},
+	{FID_GET_CURRENT_VELOCITY_PERIOD, (message_handler_func_t)get_current_velocity_period}, \
+	{FID_UNDER_VOLTAGE, (message_handler_func_t)NULL}, \
+	{FID_EMERGENCY_SHUTDOWN, (message_handler_func_t)NULL}, \
+	{FID_VELOCITY_REACHED, (message_handler_func_t)NULL}, \
+	{FID_CURRENT_VELOCITY, (message_handler_func_t)NULL},
+
+#ifdef ENCODER
+	{FID_ENABLE_ENCODER, (message_handler_func_t)enable_encoder}, \
+	{FID_DISABLE_ENCODER, (message_handler_func_t)disable_encoder}, \
+	{FID_IS_ENCODER_ENABLED, (message_handler_func_t)is_encoder_enabled}, \
+	{FID_GET_ENCODER_COUNT, (message_handler_func_t)get_encoder_count}, \
+	{FID_SET_ENCODER_CONFIG, (message_handler_func_t)set_encoder_config}, \
+	{FID_GET_ENCODER_CONFIG, (message_handler_func_t)get_encoder_config}, \
+	{FID_SET_ENCODER_PID_CONFIG, (message_handler_func_t)set_encoder_pid_config}, \
+	{FID_GET_ENCODER_PID_CONFIG, (message_handler_func_t)get_encoder_pid_config},
+#endif
 
 typedef struct {
 	MessageHeader header;
@@ -220,21 +246,84 @@ typedef struct {
 typedef struct {
 	MessageHeader header;
 	uint16_t voltage;
-} __attribute__((__packed__)) UnderVoltageSignal;
+} __attribute__((__packed__)) UnderVoltageCallback;
 
 typedef struct {
 	MessageHeader header;
-} __attribute__((__packed__)) EmergencyShutdownSignal;
-
-typedef struct {
-	MessageHeader header;
-	int16_t velocity;
-} __attribute__((__packed__)) VelocityReachedSignal;
+} __attribute__((__packed__)) EmergencyShutdownCallback;
 
 typedef struct {
 	MessageHeader header;
 	int16_t velocity;
-} __attribute__((__packed__)) CurrentVelocitySignal;
+} __attribute__((__packed__)) VelocityReachedCallback;
+
+typedef struct {
+	MessageHeader header;
+	int16_t velocity;
+} __attribute__((__packed__)) CurrentVelocityCallback;
+
+#ifdef ENCODER
+typedef struct {
+	MessageHeader header;
+} __attribute__((__packed__)) EnableEncoder;
+
+typedef struct {
+	MessageHeader header;
+} __attribute__((__packed__)) DisableEncoder;
+
+typedef struct {
+	MessageHeader header;
+} __attribute__((__packed__)) IsEncoderEnabled;
+
+typedef struct {
+	MessageHeader header;
+	bool enabled;
+} __attribute__((__packed__)) IsEncoderEnabledReturn;
+
+typedef struct {
+	MessageHeader header;
+	bool reset;
+} __attribute__((__packed__)) GetEncoderCount;
+
+typedef struct {
+	MessageHeader header;
+	int32_t count;
+} __attribute__((__packed__)) GetEncoderCountReturn;
+
+typedef struct {
+	MessageHeader header;
+	uint16_t counts_per_revolution;
+} __attribute__((__packed__)) SetEncoderConfig;
+
+typedef struct {
+	MessageHeader header;
+} __attribute__((__packed__)) GetEncoderConfig;
+
+typedef struct {
+	MessageHeader header;
+	uint16_t counts_per_revolution;
+} __attribute__((__packed__)) GetEncoderConfigReturn;
+
+typedef struct {
+	MessageHeader header;
+	float p;
+	float i;
+	float d;
+	uint8_t sample_time;
+} __attribute__((__packed__)) SetEncoderPIDConfig;
+
+typedef struct {
+	MessageHeader header;
+} __attribute__((__packed__)) GetEncoderPIDConfig;
+
+typedef struct {
+	MessageHeader header;
+	float p;
+	float i;
+	float d;
+	uint8_t sample_time;
+} __attribute__((__packed__)) GetEncoderPIDConfigReturn;
+#endif
 
 void set_velocity(const ComType com, const SetVelocity *data);
 void get_velocity(const ComType com, const GetVelocity *data);
@@ -256,5 +345,16 @@ void set_drive_mode(const ComType com, const SetDriveMode *data);
 void get_drive_mode(const ComType com, const GetDriveMode *data);
 void set_current_velocity_period(const ComType com, const SetCurrentVelocityPeriod *data);
 void get_current_velocity_period(const ComType com, const GetCurrentVelocityPeriod *data);
+
+#ifdef ENCODER
+void enable_encoder(const ComType com, const EnableEncoder *data);
+void disable_encoder(const ComType com, const DisableEncoder *data);
+void is_encoder_enabled(const ComType com, const IsEncoderEnabled *data);
+void get_encoder_count(const ComType com, const GetEncoderCount *data);
+void set_encoder_config(const ComType com, const SetEncoderConfig *data);
+void get_encoder_config(const ComType com, const GetEncoderConfig *data);
+void set_encoder_pid_config(const ComType com, const SetEncoderPIDConfig *data);
+void get_encoder_pid_config(const ComType com, const GetEncoderPIDConfig *data);
+#endif
 
 #endif

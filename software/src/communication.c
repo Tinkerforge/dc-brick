@@ -30,6 +30,11 @@
 
 #include "bricklib/utility/util_definitions.h"
 
+#ifdef ENCODER
+#include "bricklib/utility/pid.h"
+#include "bricklib/drivers/tc/tc.h"
+#endif
+
 #include <stdint.h>
 #include <stdio.h>
 
@@ -41,6 +46,13 @@ extern bool dc_enabled;
 extern uint16_t dc_pwm_frequency;
 extern uint16_t dc_current_velocity_period;
 extern uint8_t dc_mode;
+
+#ifdef ENCODER
+extern bool encoder_enabled;
+extern int32_t encoder_count_external;
+extern uint16_t encoder_counts_per_revolution;
+extern PID pid;
+#endif
 
 void set_velocity(const ComType com, const SetVelocity *data) {
 	dc_velocity_goal = data->velocity * DC_VELOCITY_MULTIPLIER;
@@ -216,3 +228,100 @@ void get_current_velocity_period(const ComType com, const GetCurrentVelocityPeri
 
 	send_blocking_with_timeout(&gcvpr, sizeof(GetCurrentVelocityPeriodReturn), com);
 }
+
+#ifdef ENCODER
+
+void enable_encoder(const ComType com, const EnableEncoder *data) {
+	encoder_enabled = true;
+	tc_channel_start(&ENCODER_TC_CHANNEL);
+	com_return_setter(com, data);
+
+	logdci("enable_encoder\n\r");
+}
+
+void disable_encoder(const ComType com, const DisableEncoder *data) {
+	encoder_enabled = false;
+	tc_channel_stop(&ENCODER_TC_CHANNEL);
+	com_return_setter(com, data);
+
+	logdci("disable_encoder\n\r");
+}
+
+void is_encoder_enabled(const ComType com, const IsEncoderEnabled *data) {
+	IsEncoderEnabledReturn ieer;
+
+	ieer.header        = data->header;
+	ieer.header.length = sizeof(IsEncoderEnabledReturn);
+	ieer.enabled       = encoder_enabled;
+
+	send_blocking_with_timeout(&ieer, sizeof(IsEncoderEnabledReturn), com);
+
+	logdci("is_encoder_enabled: %d\n\r", encoder_enabled);
+}
+
+void get_encoder_count(const ComType com, const GetEncoderCount *data) {
+	GetEncoderCountReturn gecr;
+
+	gecr.header        = data->header;
+	gecr.header.length = sizeof(GetEncoderCountReturn);
+	gecr.count         = encoder_count_external;
+
+	if(data->reset) {
+		encoder_count_external = 0;
+	}
+
+	send_blocking_with_timeout(&gecr, sizeof(GetEncoderCountReturn), com);
+
+	logdci("get_encoder_count: %d\n\r", gecr.count);
+}
+
+void set_encoder_config(const ComType com, const SetEncoderConfig *data) {
+	encoder_counts_per_revolution = data->counts_per_revolution;
+	com_return_setter(com, data);
+
+	logdci("set_encoder_config: %d\n\r", encoder_counts_per_revolution);
+}
+
+void get_encoder_config(const ComType com, const GetEncoderConfig *data) {
+	GetEncoderConfigReturn gecr;
+
+	gecr.header                = data->header;
+	gecr.header.length         = sizeof(GetEncoderConfigReturn);
+	gecr.counts_per_revolution = encoder_counts_per_revolution;
+
+	send_blocking_with_timeout(&gecr, sizeof(GetEncoderConfigReturn), com);
+
+	logdci("get_encoder_config: %d\n\r", encoder_counts_per_revolution);
+}
+
+void set_encoder_pid_config(const ComType com, const SetEncoderPIDConfig *data) {
+	pid.sample_time = data->sample_time;
+	pid_set_tuning(&pid, data->p, data->i, data->d);
+	com_return_setter(com, data);
+
+	logdci("set_encoder_pid_config: %d %d %d %d\n\r",
+	       (int16_t)data->p,
+	       (int16_t)data->i,
+	       (int16_t)data->d,
+	       data->sample_time);
+}
+
+void get_encoder_pid_config(const ComType com, const GetEncoderPIDConfig *data) {
+	GetEncoderPIDConfigReturn gepidcr;
+
+	gepidcr.header        = data->header;
+	gepidcr.header.length = sizeof(GetEncoderPIDConfigReturn);
+	gepidcr.p             = pid.k_p_orig;
+	gepidcr.i             = pid.k_i_orig;
+	gepidcr.d             = pid.k_d_orig;
+	gepidcr.sample_time   = pid.sample_time;
+
+	send_blocking_with_timeout(&gepidcr, sizeof(GetEncoderPIDConfigReturn), com);
+
+	logdci("get_encoder_pid_config: %d %d %d %d\n\r",
+	       (int16_t)gepidcr.p,
+	       (int16_t)gepidcr.i,
+	       (int16_t)gepidcr.d,
+	       gepidcr.sample_time);
+}
+#endif

@@ -23,6 +23,27 @@
 #define DC_H
 
 #include <stdint.h>
+#include <stdbool.h>
+
+#ifdef ENCODER
+#define PID_MUL 50.0
+
+#define PID_K_P_DEFAULT          2*PID_MUL
+#define PID_K_I_DEFAULT          5*PID_MUL
+#define PID_K_D_DEFAULT          0.1*PID_MUL
+
+#define PID_SAMPLE_TIME_DEFAULT  10
+#define PID_MAX_OUT_DEFAULT      0xFFFF
+#define PID_MIN_OUT_DEFAULT      0
+
+#define ENCODER_TC_CHANNEL_NUM 0
+#define ENCODER_TC_CHANNEL (TC0->TC_CHANNEL[ENCODER_TC_CHANNEL_NUM])
+#define ENCODER_COUNTER ENCODER_TC_CHANNEL.TC_RC
+#define PRIORITY_ENCODER_TC0         6
+
+void encoder_init(void);
+bool encoder_tick(void);
+#endif
 
 #define DC_VELOCITY_MULTIPLIER  1000
 #define DC_VELOCITY_MAX         0x7fff
@@ -61,10 +82,10 @@ void dc_velocity_to_pwm(void);
 uint16_t dc_get_external_voltage(void);
 uint16_t dc_get_stack_voltage(void);
 uint16_t dc_get_current_consumption(void);
-void dc_check_error_signals(void);
+void dc_check_error_callbacks(void);
 void dc_update_pwm_frequency(void);
-void dc_current_velocity_signal(void);
-void dc_velocity_reached_signal(void);
+void dc_current_velocity_callback(void);
+void dc_velocity_reached_callback(void);
 void dc_set_mode(const uint8_t mode);
 void dc_full_brake(void);
 
