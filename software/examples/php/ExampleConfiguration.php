@@ -25,5 +25,6 @@ $dc->setVelocity(32767); // Full speed forward
 
 echo "Press key to exit\n";
 fgetc(fopen('php://stdin', 'r'));
+$ipcon->disconnect();
 
 ?>

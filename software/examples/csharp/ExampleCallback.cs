@@ -37,8 +37,8 @@ class Example
 		// Don't use device before ipcon is connected
 
 		// Register "velocity reached callback" to ReachedCB
-		// cb_reached will be called every time a velocity set with
-		// set_velocity is reached
+		// ReachedCB will be called every time a velocity set with
+		// SetVelocity is reached
 		dc.VelocityReached += ReachedCB;
 
 		dc.Enable();
@@ -49,5 +49,6 @@ class Example
 
 		System.Console.WriteLine("Press key to exit");
 		System.Console.ReadKey();
+		ipcon.Disconnect();
 	}
 }
