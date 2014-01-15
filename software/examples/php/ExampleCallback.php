@@ -6,9 +6,9 @@ require_once('Tinkerforge/BrickDC.php');
 use Tinkerforge\IPConnection;
 use Tinkerforge\BrickDC;
 
-$host = 'localhost';
-$port = 4223;
-$uid = 'a4GePuz3m29'; // Change to your UID
+const HOST = 'localhost';
+const PORT = 4223;
+const UID = 'a4GePuz3m29'; // Change to your UID
 
 // Use velocity reached callback to swing back and forth between
 // full speed forward and full speed backward
@@ -28,9 +28,9 @@ function cb_reached($velocity, $userData)
 }
 
 $ipcon = new IPConnection(); // Create IP connection
-$dc = new BrickDC($uid, $ipcon); // Create device object
+$dc = new BrickDC(UID, $ipcon); // Create device object
 
-$ipcon->connect($host, $port); // Connect to brickd
+$ipcon->connect(HOST, PORT); // Connect to brickd
 // Don't use device before ipcon is connected
 
 // Register "velocity reached callback" to cb_reached
