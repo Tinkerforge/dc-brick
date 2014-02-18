@@ -1,12 +1,10 @@
-var IPConnection = require('Tinkerforge/IPConnection');
-var BrickDC = require('Tinkerforge/BrickDC');
-
+var Tinkerforge = require('tinkerforge');
 var HOST = 'localhost';
 var PORT = 4223;
 var UID = '6rGntQ';// Change to your UID
 
-var ipcon = new IPConnection();// Create IP connection
-var dc = new BrickDC(UID, ipcon);// Create device object
+var ipcon = new Tinkerforge.IPConnection();// Create IP connection
+var dc = new Tinkerforge.BrickDC(UID, ipcon);// Create device object
 
 ipcon.connect(HOST, PORT,
     function(error) {
@@ -15,7 +13,7 @@ ipcon.connect(HOST, PORT,
 );// Connect to brickd
 
 // Don't use device before ipcon is connected
-ipcon.on(IPConnection.CALLBACK_CONNECTED,
+ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
     function(connectReason) {
         dc.enable();
         // The acceleration has to be smaller or equal to the maximum acceleration
@@ -28,7 +26,7 @@ ipcon.on(IPConnection.CALLBACK_CONNECTED,
 // Register "velocity reached callback"
 // This callback will be called every time a velocity set with
 // setVelocity is reached
-dc.on(BrickDC.CALLBACK_VELOCITY_REACHED,
+dc.on(Tinkerforge.BrickDC.CALLBACK_VELOCITY_REACHED,
     // Use velocity reached callback to swing back and forth between
     // full speed forward and full speed backward
     function(velocity) {
