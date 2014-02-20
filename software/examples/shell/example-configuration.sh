@@ -4,7 +4,7 @@
 # change to your UID
 uid=XYZ
 
-# use PWM frequency of 10khz
+# use PWM frequency of 10kHz
 tinkerforge call dc-brick $uid set-pwm-frequency 10000
 
 # use drive/coast instead of drive/brake

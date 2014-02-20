@@ -1,4 +1,5 @@
 var Tinkerforge = require('tinkerforge');
+
 var HOST = 'localhost';
 var PORT = 4223;
 var UID = '6rGntQ';// Change to your UID

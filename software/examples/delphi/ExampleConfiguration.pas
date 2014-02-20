@@ -35,7 +35,7 @@ begin
   ipcon.Connect(HOST, PORT);
   { Don't use device before ipcon is connected }
 
-  dc.SetPWMFrequency(10000); { Use PWM frequency of 10khz }
+  dc.SetPWMFrequency(10000); { Use PWM frequency of 10kHz }
   dc.SetDriveMode(1); { Use 1 = Drive/Coast instead of 0 = Drive/Brake }
 
   dc.Enable;

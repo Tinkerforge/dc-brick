@@ -16,7 +16,7 @@ ipcon.connect(HOST, PORT,
 // Don't use device before ipcon is connected
 ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
     function(connectReason) {
-        dc.setPWMFrequency(10000);//Use PWM frequency of 10khz
+        dc.setPWMFrequency(10000);//Use PWM frequency of 10kHz
         dc.setDriveMode(1);//Use 1 = Drive/Coast instead of 0 = Drive/Brake
         dc.enable();
         dc.setAcceleration(5000);//Slow acceleration

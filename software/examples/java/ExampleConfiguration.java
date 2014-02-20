@@ -15,7 +15,7 @@ public class ExampleConfiguration {
 		ipcon.connect(host, port); // Connect to brickd
 		// Don't use device before ipcon is connected
 
-		dc.setPWMFrequency(10000); // Use PWM frequency of 10khz
+		dc.setPWMFrequency(10000); // Use PWM frequency of 10kHz
 		dc.setDriveMode((short)1); // Use 1 = Drive/Coast instead of 0 = Drive/Brake
 
 		dc.enable();

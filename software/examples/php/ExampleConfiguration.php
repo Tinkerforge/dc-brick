@@ -16,7 +16,7 @@ $dc = new BrickDC(UID, $ipcon); // Create device object
 $ipcon->connect(HOST, PORT); // Connect to brickd
 // Don't use device before ipcon is connected
 
-$dc->setPWMFrequency(10000); // Use PWM frequency of 10khz
+$dc->setPWMFrequency(10000); // Use PWM frequency of 10kHz
 $dc->setDriveMode(1); // Use 1 = Drive/Coast instead of 0 = Drive/Brake
 
 $dc->enable();
