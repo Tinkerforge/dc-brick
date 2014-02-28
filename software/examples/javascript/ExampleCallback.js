@@ -2,25 +2,25 @@ var Tinkerforge = require('tinkerforge');
 
 var HOST = 'localhost';
 var PORT = 4223;
-var UID = '6rGntQ';// Change to your UID
+var UID = '6rGntQ'; // Change to your UID
 
-var ipcon = new Tinkerforge.IPConnection();// Create IP connection
-var dc = new Tinkerforge.BrickDC(UID, ipcon);// Create device object
+var ipcon = new Tinkerforge.IPConnection(); // Create IP connection
+var dc = new Tinkerforge.BrickDC(UID, ipcon); // Create device object
 
 ipcon.connect(HOST, PORT,
     function(error) {
-        console.log('Error: '+error);        
+        console.log('Error: '+error);
     }
-);// Connect to brickd
-
+); // Connect to brickd
 // Don't use device before ipcon is connected
+
 ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
     function(connectReason) {
         dc.enable();
         // The acceleration has to be smaller or equal to the maximum acceleration
         // of the DC motor, otherwise callback "velocity reached callback" will be called too early
-        dc.setAcceleration(5000);// Slow acceleration
-        dc.setVelocity(32767);// Full speed forward
+        dc.setAcceleration(5000); // Slow acceleration
+        dc.setVelocity(32767); // Full speed forward
     }
 );
 
@@ -40,7 +40,7 @@ dc.on(Tinkerforge.BrickDC.CALLBACK_VELOCITY_REACHED,
             dc.setVelocity(32767);
         }
         else {
-            console.log('Error');// Can only happen if another program sets velocity
+            console.log('Error'); // Can only happen if another program sets velocity
         }
     }
 );
@@ -52,4 +52,3 @@ process.stdin.on('data',
         process.exit(0);
     }
 );
-
