@@ -60,7 +60,7 @@ begin
   dc.Enable;
 
   { The acceleration has to be smaller or equal to the maximum acceleration
-    of the dc motor, otherwise ReachedCB will be called too early }
+    of the DC motor, otherwise ReachedCB will be called too early }
   dc.SetAcceleration(5000); { Slow acceleration }
   dc.SetVelocity(32767); { Full speed forward }
 

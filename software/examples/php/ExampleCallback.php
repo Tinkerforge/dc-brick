@@ -40,7 +40,7 @@ $dc->registerCallback(BrickDC::CALLBACK_VELOCITY_REACHED, 'cb_reached', $dc);
 
 $dc->enable();
 // The acceleration has to be smaller or equal to the maximum acceleration
-// of the dc motor, otherwise cb_reached will be called too early
+// of the DC motor, otherwise cb_reached will be called too early
 $dc->setAcceleration(5000); // Slow acceleration
 $dc->setVelocity(32767); // Full speed forward
 

@@ -8,7 +8,7 @@ uid=XYZ
 tinkerforge call dc-brick $uid enable
 
 # the acceleration has to be smaller or equal to the maximum acceleration
-# of the dc motor, otherwise the velocity-reached will be triggered too early
+# of the DC motor, otherwise the velocity-reached will be triggered too early
 
 # slow acceleration
 tinkerforge call dc-brick $uid set-acceleration 5000

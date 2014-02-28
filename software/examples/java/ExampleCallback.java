@@ -44,7 +44,7 @@ public class ExampleCallback {
 
 		dc.enable();
 		// The acceleration has to be smaller or equal to the maximum acceleration
-		// of the dc motor, otherwise the velocity reached listener will be called too early
+		// of the DC motor, otherwise the velocity reached listener will be called too early
 		dc.setAcceleration(5000); // Slow acceleration
 		dc.setVelocity((short)32767); // Full speed forward
 

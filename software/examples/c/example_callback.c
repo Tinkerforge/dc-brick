@@ -50,7 +50,7 @@ int main() {
 	dc_enable(&dc);
 
 	// The acceleration has to be smaller or equal to the maximum acceleration
-	// of the dc motor, otherwise cb_reached will be called too early
+	// of the DC motor, otherwise cb_reached will be called too early
 	dc_set_acceleration(&dc, 5000); // Slow acceleration
 	dc_set_velocity(&dc, 32767); // Full speed forward
 
