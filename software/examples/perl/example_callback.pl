@@ -16,12 +16,12 @@ sub cb_reached
 {
     my ($velocity) = @_;
 
-    if($velocity == 32767)
+    if ($velocity == 32767)
     {
         print "Velocity: Full Speed forward, turning backward\n";
         $dc->set_velocity(-32767);
     }   
-    elsif($velocity == -32767)
+    elsif ($velocity == -32767)
     {
         print "Velocity: Full Speed backward, turning forward\n";
         $dc->set_velocity(32767);
