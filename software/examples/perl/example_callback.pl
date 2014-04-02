@@ -18,17 +18,17 @@ sub cb_reached
 
     if($velocity == 32767)
     {
-        print("\nVelocity: Full Speed forward, turning backward\n");
+        print "Velocity: Full Speed forward, turning backward\n";
         $dc->set_velocity(-32767);
     }   
     elsif($velocity == -32767)
     {
-        print("\nVelocity: Full Speed backward, turning forward\n");
+        print "Velocity: Full Speed backward, turning forward\n";
         $dc->set_velocity(32767);
     }    
     else
     {
-        print("\nError\n") # Can only happen if another program sets velocity
+        print "Error\n"; # Can only happen if another program sets velocity
     }
 }
 
@@ -46,6 +46,6 @@ $dc->enable();
 $dc->set_acceleration(5000); # Slow acceleration
 $dc->set_velocity(32767); # Full speed forward
 
-print "\nPress any key to exit...\n";
+print "Press any key to exit...\n";
 <STDIN>;
 $ipcon->disconnect();

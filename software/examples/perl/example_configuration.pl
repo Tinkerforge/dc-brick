@@ -20,6 +20,6 @@ $dc->enable();
 $dc->set_acceleration(5000); # Slow acceleration
 $dc->set_velocity(32767); # Full speed forward
 
-print "\nPress any key to exit...\n";
+print "Press any key to exit...\n";
 <STDIN>;
 $ipcon->disconnect();
