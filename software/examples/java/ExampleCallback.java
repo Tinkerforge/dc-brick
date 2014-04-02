@@ -4,8 +4,8 @@ import com.tinkerforge.TimeoutException;
 import com.tinkerforge.NotConnectedException;
 
 public class ExampleCallback {
-	private static final String host = "localhost";
-	private static final int port = 4223;
+	private static final String HOST = "localhost";
+	private static final int PORT = 4223;
 	private static final String UID = "aetiNB3mX2u"; // Change to your UID
 
 	// Note: To make the example code cleaner we do not handle exceptions. Exceptions you
@@ -15,7 +15,7 @@ public class ExampleCallback {
 		// Note: Declare servo final, so the listener can access it
 		final BrickDC dc = new BrickDC(UID, ipcon); // Create device object
 
-		ipcon.connect(host, port); // Connect to brickd
+		ipcon.connect(HOST, PORT); // Connect to brickd
 		// Don't use device before ipcon is connected
 
 		// Add and implement velocity reached listener 
