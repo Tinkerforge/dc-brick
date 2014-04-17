@@ -6,7 +6,6 @@ function octave_example_callback
     UID = "5VF5vG"; % Change to your UID
 
     ipcon = java_new("com.tinkerforge.IPConnection"); % Create IP connection
-    global dc;
     dc = java_new("com.tinkerforge.BrickDC", UID, ipcon); % Create device object
 
     ipcon.connect(HOST, PORT); % Connect to brickd
@@ -15,7 +14,7 @@ function octave_example_callback
     % Register "velocity reached callback" to cb_reached
     % cb_reached will be called every time a velocity set with
     % set_velocity is reached
-    dc.addVelocityReachedListener("cb_reached");
+    dc.addVelocityReachedCallback(@cb_reached);
 
     dc.enable();
     % The acceleration has to be smaller or equal to the maximum acceleration
@@ -23,18 +22,19 @@ function octave_example_callback
     dc.setAcceleration(5000); % Slow acceleration
     dc.setVelocity(32767); % Full speed forward
 
-    input('\nPress any key to exit...\n', 's');
+    input("Press any key to exit...\n", "s");
     ipcon.disconnect();
 end
 
 % Use velocity reached callback to swing back and forth between
 % full speed forward and full speed backward
-function cb_reached(velocity)
-    global dc;
-    if str2num(velocity.toString()) == 32767
+function cb_reached(e)
+    dc = e.getSource();
+
+    if str2num(e.velocity.toString()) == 32767
         fprintf("Velocity: Full Speed forward, turning backward\n");
         dc.setVelocity(-32767);
-    elseif str2num(velocity.toString()) == -32767
+    elseif str2num(e.velocity.toString()) == -32767
         fprintf("Velocity: Full Speed backward, turning forward\n");
         dc.setVelocity(32767);
     else

@@ -6,7 +6,6 @@ function octave_example_configuration
     UID = "5VF5vG"; % Change to your UID
 
     ipcon = java_new("com.tinkerforge.IPConnection"); % Create IP connection
-    global dc;
     dc = java_new("com.tinkerforge.BrickDC", UID, ipcon); % Create device object
 
     ipcon.connect(HOST, PORT); % Connect to brickd
@@ -19,6 +18,6 @@ function octave_example_configuration
     dc.setAcceleration(5000); % Slow acceleration
     dc.setVelocity(32767); % Full speed forward
 
-    input("\nPress any key to exit...\n", "s");
+    input("Press any key to exit...\n", "s");
     ipcon.disconnect();
 end
