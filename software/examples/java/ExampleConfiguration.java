@@ -22,7 +22,7 @@ public class ExampleConfiguration {
 		dc.setAcceleration(5000); // Slow acceleration
 		dc.setVelocity((short)32767); // Full speed forward
 
-		System.console().readLine("Press key to exit\n");
+		System.out.println("Press key to exit"); System.in.read();
 		ipcon.disconnect();
 	}
 }
