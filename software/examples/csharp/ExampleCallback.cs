@@ -47,8 +47,8 @@ class Example
 		dc.SetAcceleration(5000); // Slow acceleration
 		dc.SetVelocity(32767); // Full speed forward
 
-		System.Console.WriteLine("Press key to exit");
-		System.Console.ReadKey();
+		System.Console.WriteLine("Press enter to exit");
+		System.Console.ReadLine();
 		ipcon.Disconnect();
 	}
 }
