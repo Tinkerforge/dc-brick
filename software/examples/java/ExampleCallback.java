@@ -49,6 +49,7 @@ public class ExampleCallback {
 		dc.setVelocity((short)32767); // Full speed forward
 
 		System.out.println("Press key to exit"); System.in.read();
+		dc.disable();
 		ipcon.disconnect();
 	}
 }

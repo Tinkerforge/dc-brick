@@ -48,6 +48,7 @@ dc.on(Tinkerforge.BrickDC.CALLBACK_VELOCITY_REACHED,
 console.log("Press any key to exit ...");
 process.stdin.on('data',
     function(data) {
+        dc.disable();
         ipcon.disconnect();
         process.exit(0);
     }

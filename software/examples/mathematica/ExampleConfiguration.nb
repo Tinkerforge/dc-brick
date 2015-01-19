@@ -3,10 +3,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[         0,          0]
-NotebookDataLength[      4173,        118]
-NotebookOptionsPosition[      3741,         97]
-NotebookOutlinePosition[      4079,        112]
-CellTagsIndexPosition[      4036,        109]
+NotebookDataLength[      4374,        123]
+NotebookOptionsPosition[      3941,        102]
+NotebookOutlinePosition[      4280,        117]
+CellTagsIndexPosition[      4237,        114]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -63,41 +63,46 @@ Cell[BoxData[{
       RowBox[{"Drive", "/", "Coast"}], " ", "instead", " ", "of", " ", "0"}], 
      "=", 
      RowBox[{"Drive", "/", "Brake"}]}]}], " ", "*)"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{"dc", "@", 
   RowBox[{"Enable", "[", "]"}]}], "\n", 
  RowBox[{
   RowBox[{"dc", "@", 
    RowBox[{"SetAcceleration", "[", "5000", "]"}]}], 
   RowBox[{"(*", " ", 
-   RowBox[{"low", " ", "acceleration"}], " ", "*)"}]}], "\n", 
+   RowBox[{"Low", " ", "acceleration"}], " ", "*)"}]}], "\n", 
  RowBox[{
   RowBox[{"dc", "@", 
    RowBox[{"SetVelocity", "[", "32767", "]"}]}], 
   RowBox[{"(*", " ", 
    RowBox[{"Full", " ", "speed", " ", "forward"}], " ", "*)"}], 
+  "\[IndentingNewLine]"}], "\n", 
+ RowBox[{
+  RowBox[{"Input", "[", "\"\<Click OK to exit\>\"", "]"}], 
   "\[IndentingNewLine]", "\[IndentingNewLine]", 
   RowBox[{"(*", " ", 
    RowBox[{"Clean", " ", "up"}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{"dc", "@", 
+  RowBox[{"Disable", "[", "]"}]}], "\[IndentingNewLine]", 
  RowBox[{"ipcon", "@", 
   RowBox[{"Disconnect", "[", "]"}]}], "\[IndentingNewLine]", 
  RowBox[{"ReleaseNETObject", "[", "dc", "]"}], "\[IndentingNewLine]", 
  RowBox[{"ReleaseNETObject", "[", "ipcon", "]"}]}], "Input",
  CellChangeTimes->CompressedData["
-1:eJwdzVsoQwEcBvCT5B7KXMIWy+VhEWMvSzbtYXsw5GEUNc3t1JhFiwdeeBuN
-jdgxZ20Pa1FKIiOU1Iqiuc0szCOn8SAjhZzvPPz71Vff9y/WDbX2xhEEwWcP
-BrTvtdQl01ClE0ugRR3WwtKXMx08+rP2Q1VkdRg+tEhHoVAks8H4hNAKrInW
-0HBDkD2+zDrtGeHsmwtOcX4wnHqfO+piTd/deYURKi0GnQPMF9TYOn/g8y3J
-Wb3kFbqRCxwl0JAXL4KxCk0lJFWMBPod35yPzgkbNB4q52FbLqU4wH9FqAkq
-6XMNFN93tsNFs7numFVtDdRDQ6yIOMWeT5sBKUt3Dtz+Tc6DiYPSO/KK7bXx
-wvBUts/Agc0bTn/K3oKelXk7dEBRNMkDySe7F8q/xzpo1roteQ+cLc83wgmy
-mVNqajTBk/YuzlT75wV0zfiDcK3MnP7Kyv9Yz4SFozQPTl5nFcB/iLAMtA==
-
+1:eJwdzVsoQwEcBvCl5bpQrrks5PKwiI2XJduitmLIw7aiprmdmlukeeCFt9HY
+iM1sbQ9rUUoio1lJraxo7izMI8e2BxmtkPOdh3+/+ur7/sWqkY6+OAaDwaYO
++pUftaZLUlSt4tZBnTSghGVvZyp4/KcfgJLgxhh8audrYAlHYIDM+Pt1yAvx
+LHCbnTW1RjnnGKftX7ydpf0kadUue8hGmXqwH4ZBEysKrYPkN5QZun7g6x1B
+W7PqLLEjZ5tL4XAukwOjlbIqSEjIOug1x2ifrdMGOOoRL0F5jqnxCP8b71uh
+2HIug9zHLgVc0WrrTyilen8DHI4WMXzYcynToEnXkw33fpNyYcIQ/4G4onry
+zAD0CdwkHNy5ofUmHy6rKcmIxww5oUQHJF6MTiiMTXZaKOt3hb1woSJvFE4T
+bbT8iZYJeKropk0xfl1A27z3Fm6Wa1PDlIWfW+mwQGPJhDPXGfmw2b3aFGG9
+i3ShmBj+A6CEFZ0=
   "]]
 },
 WindowSize->{1521, 867},
-WindowMargins->{{173, Automatic}, {65, Automatic}},
-FrontEndVersion->"9.0 for Linux x86 (64-bit) (February 7, 2013)",
+WindowMargins->{{Automatic, 136}, {86, Automatic}},
+FrontEndVersion->"9.0 for Linux x86 (64-bit) (November 20, 2012)",
 StyleDefinitions->"Default.nb"
 ]
 (* End of Notebook Content *)
@@ -112,7 +117,7 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[400, 13, 602, 11, 55, "Input"],
-Cell[1005, 26, 2732, 69, 451, "Input"]
+Cell[1005, 26, 2932, 74, 517, "Input"]
 }
 ]
 *)

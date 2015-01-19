@@ -27,6 +27,7 @@ ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
 console.log("Press any key to exit ...");
 process.stdin.on('data',
     function(data) {
+        dc.disable();
         ipcon.disconnect();
         process.exit(0);
     }

@@ -24,6 +24,7 @@ function matlab_example_callback()
     dc.setVelocity(32767); % Full speed forward
 
     input('Press any key to exit...\n', 's');
+    dc.disable();
     ipcon.disconnect();
 end
 

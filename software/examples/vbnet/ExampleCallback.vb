@@ -40,6 +40,7 @@ Module ExampleCallback
 
         System.Console.WriteLine("Press key to exit")
         System.Console.ReadKey()
+        dc.Disable()
         ipcon.Disconnect()
     End Sub
 End Module

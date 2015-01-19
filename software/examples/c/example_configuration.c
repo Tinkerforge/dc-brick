@@ -33,5 +33,6 @@ int main() {
 
 	printf("Press key to exit\n");
 	getchar();
+	dc_disable(&dc);
 	ipcon_destroy(&ipcon); // Calls ipcon_disconnect internally
 }

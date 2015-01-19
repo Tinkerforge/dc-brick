@@ -25,4 +25,5 @@ dc.set_velocity 32767 # Full speed forward
 
 puts 'Press key to exit'
 $stdin.gets
+dc.disable
 ipcon.disconnect

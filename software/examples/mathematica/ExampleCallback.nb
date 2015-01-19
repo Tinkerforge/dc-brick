@@ -3,10 +3,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[         0,          0]
-NotebookDataLength[      7313,        176]
-NotebookOptionsPosition[      6880,        155]
-NotebookOutlinePosition[      7218,        170]
-CellTagsIndexPosition[      7175,        167]
+NotebookDataLength[      7489,        180]
+NotebookOptionsPosition[      7062,        159]
+NotebookOutlinePosition[      7394,        174]
+CellTagsIndexPosition[      7351,        171]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -103,7 +103,7 @@ Cell[BoxData[{
      " ", "acceleration"}], " ", "*)"}], "\n", 
   RowBox[{"(*", " ", 
    RowBox[{
-    RowBox[{"of", " ", "the", " ", "dc", " ", "motor"}], ",", 
+    RowBox[{"of", " ", "the", " ", "DC", " ", "motor"}], ",", 
     RowBox[{
     "otherwise", " ", "ReachedCB", " ", "will", " ", "be", " ", "called", " ",
       "too", " ", "early"}]}], " ", "*)"}]}], "\n", 
@@ -123,6 +123,8 @@ Cell[BoxData[{
   "\[IndentingNewLine]", "\[IndentingNewLine]", 
   RowBox[{"(*", " ", 
    RowBox[{"Clean", " ", "up"}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{"dc", "@", 
+  RowBox[{"Disable", "[", "]"}]}], "\[IndentingNewLine]", 
  RowBox[{"ipcon", "@", 
   RowBox[{"Disconnect", "[", "]"}]}], "\[IndentingNewLine]", 
  RowBox[{"ReleaseNETObject", "[", "dc", "]"}], "\[IndentingNewLine]", 
@@ -151,11 +153,13 @@ Cell[BoxData[{
    3.600608760452553*^9}, {3.600608824736239*^9, 3.600608825481593*^9}, 
    3.60060918655473*^9, {3.600609227515625*^9, 3.600609227953993*^9}, {
    3.6007712106765623`*^9, 3.600771226723548*^9}, {3.600771334518587*^9, 
-   3.600771535293544*^9}, {3.600773176212331*^9, 3.6007731810087967`*^9}}]
+   3.600771535293544*^9}, {3.600773176212331*^9, 3.6007731810087967`*^9}, {
+   3.630658098687954*^9, 3.630658101868001*^9}, {3.630658218212207*^9, 
+   3.6306582183681993`*^9}}]
 },
 WindowSize->{1521, 867},
-WindowMargins->{{334, Automatic}, {54, Automatic}},
-FrontEndVersion->"9.0 for Linux x86 (64-bit) (February 7, 2013)",
+WindowMargins->{{332, 65}, {52, Automatic}},
+FrontEndVersion->"9.0 for Linux x86 (64-bit) (November 20, 2012)",
 StyleDefinitions->"Default.nb"
 ]
 (* End of Notebook Content *)
@@ -170,7 +174,7 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[400, 13, 652, 12, 55, "Input"],
-Cell[1055, 27, 5821, 126, 825, "Input"]
+Cell[1055, 27, 6003, 130, 847, "Input"]
 }
 ]
 *)

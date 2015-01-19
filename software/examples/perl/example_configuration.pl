@@ -22,4 +22,5 @@ $dc->set_velocity(32767); # Full speed forward
 
 print "Press any key to exit...\n";
 <STDIN>;
+$dc->disable();
 $ipcon->disconnect();

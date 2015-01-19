@@ -23,6 +23,7 @@ class Example
 
 		System.Console.WriteLine("Press enter to exit");
 		System.Console.ReadLine();
+		dc.Disable();
 		ipcon.Disconnect();
 	}
 }

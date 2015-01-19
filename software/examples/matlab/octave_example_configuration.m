@@ -19,5 +19,6 @@ function octave_example_configuration()
     dc.setVelocity(32767); % Full speed forward
 
     input("Press any key to exit...\n", "s");
+    dc.disable();
     ipcon.disconnect();
 end

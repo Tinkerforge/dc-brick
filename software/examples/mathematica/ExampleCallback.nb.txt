@@ -35,6 +35,7 @@ dc@SetVelocity[32767](* Full speed forward *)
 Input["Click OK to exit"]
 
 (* Clean up *)
+dc@Disable[]
 ipcon@Disconnect[]
 ReleaseNETObject[dc]
 ReleaseNETObject[ipcon]
