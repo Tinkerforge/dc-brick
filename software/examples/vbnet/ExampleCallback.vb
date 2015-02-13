@@ -39,7 +39,7 @@ Module ExampleCallback
         dc.SetVelocity(32767) ' Full speed forward
 
         System.Console.WriteLine("Press key to exit")
-        System.Console.ReadKey()
+        System.Console.ReadLine()
         dc.Disable()
         ipcon.Disconnect()
     End Sub
