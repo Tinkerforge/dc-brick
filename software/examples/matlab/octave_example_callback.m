@@ -31,14 +31,23 @@ end
 % full speed forward and full speed backward
 function cb_reached(e)
     dc = e.getSource();
+    velocity = short2int(e.velocity);
 
-    if str2num(e.velocity.toString()) == 32767
+    if velocity == 32767
         fprintf("Velocity: Full Speed forward, turning backward\n");
         dc.setVelocity(-32767);
-    elseif str2num(e.velocity.toString()) == -32767
+    elseif velocity == -32767
         fprintf("Velocity: Full Speed backward, turning forward\n");
         dc.setVelocity(32767);
     else
         fprintf("Error\n"); % Can only happen if another program sets velocity
+    end
+end
+
+function int = short2int(short)
+    if compare_versions(version(), "3.8", "<=")
+        int = short.intValue();
+    else
+        int = short;
     end
 end
