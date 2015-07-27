@@ -4,7 +4,7 @@ class Example
 {
 	private static string HOST = "localhost";
 	private static int PORT = 4223;
-	private static string UID = "aetiNB3mX2u"; // Change to your UID
+	private static string UID = "XYZ"; // Change to your UID
 
 
 	// Use velocity reached callback to swing back and forth between
@@ -28,7 +28,7 @@ class Example
 		}
 	}
 
-	static void Main() 
+	static void Main()
 	{
 		IPConnection ipcon = new IPConnection(); // Create IP connection
 		BrickDC dc = new BrickDC(UID, ipcon); // Create device object
