@@ -6,7 +6,6 @@ class Example
 	private static int PORT = 4223;
 	private static string UID = "XYZ"; // Change to your UID
 
-
 	// Use velocity reached callback to swing back and forth between
 	// full speed forward and full speed backward
 	static void ReachedCB(BrickDC sender, short velocity)
