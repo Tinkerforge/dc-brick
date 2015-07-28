@@ -1,7 +1,6 @@
 import com.tinkerforge.IPConnection;
 import com.tinkerforge.BrickDC;
-import com.tinkerforge.TimeoutException;
-import com.tinkerforge.NotConnectedException;
+import com.tinkerforge.TinkerforgeException;
 
 public class ExampleCallback {
 	private static final String HOST = "localhost";
@@ -26,15 +25,13 @@ public class ExampleCallback {
 					System.out.println("Velocity: Full Speed forward, turning backward");
 					try {
 						dc.setVelocity((short)-32767);
-					} catch(TimeoutException e) {
-					} catch(NotConnectedException e) {
+					} catch(TinkerforgeException e) {
 					}
 				} else if(velocity == -32767) {
 					System.out.println("Velocity: Full Speed backward, turning forward");
 					try {
 						dc.setVelocity((short)32767);
-					} catch(TimeoutException e) {
-					} catch(NotConnectedException e) {
+					} catch(TinkerforgeException e) {
 					}
 				} else {
 					System.out.println("Error"); // Can only happen if another program sets velocity
