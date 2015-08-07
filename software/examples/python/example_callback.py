@@ -6,14 +6,11 @@ PORT = 4223
 UID = "XYZ" # Change to your UID
 
 from tinkerforge.ip_connection import IPConnection
-from tinkerforge.brick_dc import DC
-
-ipcon = IPConnection() # Create IP connection
-dc = DC(UID, ipcon) # Create device object
+from tinkerforge.brick_dc import BrickDC
 
 # Use velocity reached callback to swing back and forth between
 # full speed forward and full speed backward
-def cb_reached(velocity):
+def cb_velocity_reached(velocity, dc):
     if velocity == 32767:
         print('Velocity: Full Speed forward, turning backward')
         dc.set_velocity(-32767)
@@ -24,13 +21,17 @@ def cb_reached(velocity):
         print('Error') # Can only happen if another program sets velocity
 
 if __name__ == "__main__":
+    ipcon = IPConnection() # Create IP connection
+    dc = BrickDC(UID, ipcon) # Create device object
+
     ipcon.connect(HOST, PORT) # Connect to brickd
     # Don't use device before ipcon is connected
 
     # Register "velocity reached callback" to cb_reached
     # cb_reached will be called every time a velocity set with
     # set_velocity is reached
-    dc.register_callback(dc.CALLBACK_VELOCITY_REACHED, cb_reached)
+    dc.register_callback(dc.CALLBACK_VELOCITY_REACHED,
+                         lambda x: cb_velocity_reached(x, dc))
 
     dc.enable()
     # The acceleration has to be smaller or equal to the maximum acceleration
