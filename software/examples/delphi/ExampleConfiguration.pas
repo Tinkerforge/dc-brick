@@ -18,7 +18,7 @@ type
 const
   HOST = 'localhost';
   PORT = 4223;
-  UID = 'ap8Mkxo2Dnm'; { Change to your UID }
+  UID = 'XYZ'; { Change to your UID }
 
 var
   e: TExample;
@@ -40,7 +40,7 @@ begin
 
   dc.Enable;
   dc.SetAcceleration(5000); { Slow acceleration }
-  dc.SetVelocity(32767); { Full speed }
+  dc.SetVelocity(32767); { Full speed forward }
 
   WriteLn('Press key to exit');
   ReadLn;
