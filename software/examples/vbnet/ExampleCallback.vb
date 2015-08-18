@@ -3,7 +3,7 @@ Imports Tinkerforge
 Module ExampleCallback
     Const HOST As String = "localhost"
     Const PORT As Integer = 4223
-    Const UID As String = "6eS9CJ" ' Change to your UID
+    Const UID As String = "XYZ" ' Change to your UID
 
     ' Use velocity reached callback to swing back and forth between
     ' full speed forward and full speed backward
