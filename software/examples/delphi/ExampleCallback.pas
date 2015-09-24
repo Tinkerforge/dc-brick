@@ -12,27 +12,28 @@ type
     ipcon: TIPConnection;
     dc: TBrickDC;
   public
-    procedure ReachedCB(sender: TBrickDC; const velocity: smallint);
+    procedure VelocityReachedCB(sender: TBrickDC; const velocity: smallint);
     procedure Execute;
   end;
 
 const
   HOST = 'localhost';
   PORT = 4223;
-  UID = 'XYZ'; { Change to your UID }
+  UID = 'XXYYZZ'; { Change to your UID }
 
 var
   e: TExample;
 
-{ Use velocity reached callback to swing back and forth }
-procedure TExample.ReachedCB(sender: TBrickDC; const velocity: smallint);
+{ Use velocity reached callback to swing back and forth
+  between full speed forward and full speed backward }
+procedure TExample.VelocityReachedCB(sender: TBrickDC; const velocity: smallint);
 begin
   if (velocity = 32767) then begin
-    WriteLn('Velocity: Full Speed forward, turning backward');
+    WriteLn('Velocity: Full speed forward, now turning backward');
     sender.SetVelocity(-32767);
   end
   else if (velocity = -32767) then begin
-    WriteLn('Velocity: Full Speed backward, turning forward');
+    WriteLn('Velocity: Full speed backward, now turning forward');
     sender.SetVelocity(32767);
   end
   else begin
@@ -52,21 +53,21 @@ begin
   ipcon.Connect(HOST, PORT);
   { Don't use device before ipcon is connected }
 
-  { Register "velocity reached callback" to procedure ReachedCB.
-    ReachedCB will be called every time a velocity set with
-    SetVelocity is reached }
-  dc.OnVelocityReached := {$ifdef FPC}@{$endif}ReachedCB;
-
-  dc.Enable;
-
-  { The acceleration has to be smaller or equal to the maximum acceleration
-    of the DC motor, otherwise ReachedCB will be called too early }
+  { The acceleration has to be smaller or equal to the maximum
+    acceleration of the DC motor, otherwise the velocity reached
+    callback will be called too early }
   dc.SetAcceleration(5000); { Slow acceleration }
   dc.SetVelocity(32767); { Full speed forward }
 
+  { Register velocity reached callback to procedure VelocityReachedCB }
+  dc.OnVelocityReached := {$ifdef FPC}@{$endif}VelocityReachedCB;
+
+  { Enable motor power }
+  dc.Enable;
+
   WriteLn('Press key to exit');
   ReadLn;
-  dc.Disable;
+  dc.Disable; { Disable motor power }
   ipcon.Destroy; { Calls ipcon.Disconnect internally }
 end;
 

@@ -34,34 +34,35 @@
                 var dc = new Tinkerforge.BrickDC(UID, ipcon); // Create device object
                 ipcon.connect(HOST, PORT,
                     function(error) {
-                        textArea.value += 'Error: '+error+'\n';
+                        textArea.value += 'Error: ' + error + '\n';
                     }
                 ); // Connect to brickd
                 // Don't use device before ipcon is connected
 
                 ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
-                    function(connectReason) {
-                        dc.enable();
+                    function (connectReason) {
                         // The acceleration has to be smaller or equal to the maximum
-                        // acceleration of the DC motor, otherwise callback
-                        // "velocity reached callback" will be called too early
+                        // acceleration of the DC motor, otherwise the velocity reached
+                        // callback will be called too early
                         dc.setAcceleration(5000); // Slow acceleration
                         dc.setVelocity(32767); // Full speed forward
+
+                        // Enable motor power
+                        dc.enable();
                     }
                 );
-                // Register "velocity reached callback"
-                // This callback will be called every time a velocity set with
-                // setVelocity is reached
+
+                // Register velocity reached callback
                 dc.on(Tinkerforge.BrickDC.CALLBACK_VELOCITY_REACHED,
-                    // Use velocity reached callback to swing back and forth between
-                    // full speed forward and full speed backward
-                    function(velocity) {
+                    // Use velocity reached callback to swing back and forth
+                    // between full speed forward and full speed backward
+                    function (velocity) {
                         if(velocity == 32767) {
-                            textArea.value += 'Velocity: Full Speed forward, turning backward\n';
+                            textArea.value += 'Velocity: Full speed forward, now turning backward\n';
                             dc.setVelocity(-32767);
                         }
                         else if(velocity === -32767) {
-                            textArea.value += 'Velocity: Full Speed backward, turning forward\n';
+                            textArea.value += 'Velocity: Full speed backward, now turning forward\n';
                             dc.setVelocity(32767);
                         }
                         else {

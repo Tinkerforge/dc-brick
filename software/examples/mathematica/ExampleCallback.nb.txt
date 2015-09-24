@@ -3,39 +3,42 @@ LoadNETAssembly["Tinkerforge",NotebookDirectory[]<>"../../.."]
 
 host="localhost"
 port=4223
-uid="68WwdQ"(* Change to your UID *)
+uid="XXYYZZ"(*Change to your UID*)
 
-(* Create IPConnection and device object *)
+(*Create IPConnection and device object*)
 ipcon=NETNew["Tinkerforge.IPConnection"]
 dc=NETNew["Tinkerforge.BrickDC",uid,ipcon]
 ipcon@Connect[host,port]
 
-(* VelocityReachedCB will be called every time a velocity set with *)
-(* SetVelocity is reached *)
+(*The acceleration has to be smaller or equal to the maximum*)
+(*acceleration of the DC motor, otherwise the velocity reached*)
+(*callback will be called too early*)
+dc@SetAcceleration[5000](*Slow acceleration*)
+dc@SetVelocity[32767](*Full speed forward*)
+
+(*Use velocity reached callback to swing back and forth*)
+(*between full speed forward and full speed backward*)
 VelocityReachedCB[sender_,velocity_]:=
  Module[{},
   If[velocity==32767,
-   Print["Velocity: Full Speed forward, turning backward"];
+   Print["Velocity: Full speed forward, now turning backward"];
    sender@SetVelocity[-32767]
   ];
   If[velocity==-32767,
-   Print["Velocity: Full Speed backward, turning forward"];
+   Print["Velocity: Full speed backward, now turning forward"];
    sender@SetVelocity[32767]
   ];
  ]
 
 AddEventHandler[dc@VelocityReached,VelocityReachedCB]
 
+(*Enable motor power*)
 dc@Enable[]
-(* The acceleration has to be smaller or equal to the maximum acceleration *)
-(* of the DC motor,otherwise ReachedCB will be called too early *)
-dc@SetAcceleration[5000](* Slow acceleration *)
-dc@SetVelocity[32767](* Full speed forward *)
 
 Input["Click OK to exit"]
 
-(* Clean up *)
-dc@Disable[]
+(*Clean up*)
+dc@Disable[](*Disable motor power*)
 ipcon@Disconnect[]
 ReleaseNETObject[dc]
 ReleaseNETObject[ipcon]

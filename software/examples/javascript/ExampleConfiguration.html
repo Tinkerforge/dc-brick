@@ -34,18 +34,18 @@
                 var dc = new Tinkerforge.BrickDC(UID, ipcon); // Create device object
                 ipcon.connect(HOST, PORT,
                     function(error) {
-                        textArea.value += 'Error: '+error+ '\n';
+                        textArea.value += 'Error: ' + error + '\n';
                     }
                 ); // Connect to brickd
                 // Don't use device before ipcon is connected
 
                 ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
-                    function(connectReason) {
-                        dc.setPWMFrequency(10000); // Use PWM frequency of 10khz
-                        dc.setDriveMode(1); // Use 1 = Drive/Coast instead of 0 = Drive/Brake
-                        dc.enable();
+                    function (connectReason) {
+                        dc.setDriveMode(Tinkerforge.BrickDC.DRIVE_MODE_DRIVE_COAST);
+                        dc.setPWMFrequency(10000); // Use PWM frequency of 10kHz
                         dc.setAcceleration(5000); // Slow acceleration
                         dc.setVelocity(32767); // Full speed forward
+                        dc.enable(); // Enable motor power
                     }
                 );
             }

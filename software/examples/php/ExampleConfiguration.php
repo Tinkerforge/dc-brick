@@ -8,7 +8,7 @@ use Tinkerforge\BrickDC;
 
 const HOST = 'localhost';
 const PORT = 4223;
-const UID = 'a4GePuz3m29'; // Change to your UID
+const UID = 'XXYYZZ'; // Change to your UID
 
 $ipcon = new IPConnection(); // Create IP connection
 $dc = new BrickDC(UID, $ipcon); // Create device object
@@ -16,16 +16,15 @@ $dc = new BrickDC(UID, $ipcon); // Create device object
 $ipcon->connect(HOST, PORT); // Connect to brickd
 // Don't use device before ipcon is connected
 
+$dc->setDriveMode(BrickDC::DRIVE_MODE_DRIVE_COAST);
 $dc->setPWMFrequency(10000); // Use PWM frequency of 10kHz
-$dc->setDriveMode(1); // Use 1 = Drive/Coast instead of 0 = Drive/Brake
-
-$dc->enable();
 $dc->setAcceleration(5000); // Slow acceleration
 $dc->setVelocity(32767); // Full speed forward
+$dc->enable(); // Enable motor power
 
 echo "Press key to exit\n";
 fgetc(fopen('php://stdin', 'r'));
-$dc->disable();
+$dc->disable(); // Disable motor power
 $ipcon->disconnect();
 
 ?>

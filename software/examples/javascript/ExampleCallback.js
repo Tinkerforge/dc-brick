@@ -2,41 +2,42 @@ var Tinkerforge = require('tinkerforge');
 
 var HOST = 'localhost';
 var PORT = 4223;
-var UID = '6rGntQ'; // Change to your UID
+var UID = 'XXYYZZ'; // Change to your UID
 
 var ipcon = new Tinkerforge.IPConnection(); // Create IP connection
 var dc = new Tinkerforge.BrickDC(UID, ipcon); // Create device object
 
 ipcon.connect(HOST, PORT,
-    function(error) {
-        console.log('Error: '+error);
+    function (error) {
+        console.log('Error: ' + error);
     }
 ); // Connect to brickd
 // Don't use device before ipcon is connected
 
 ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
-    function(connectReason) {
-        dc.enable();
-        // The acceleration has to be smaller or equal to the maximum acceleration
-        // of the DC motor, otherwise callback "velocity reached callback" will be called too early
+    function (connectReason) {
+        // The acceleration has to be smaller or equal to the maximum
+        // acceleration of the DC motor, otherwise the velocity reached
+        // callback will be called too early
         dc.setAcceleration(5000); // Slow acceleration
         dc.setVelocity(32767); // Full speed forward
+
+        // Enable motor power
+        dc.enable();
     }
 );
 
-// Register "velocity reached callback"
-// This callback will be called every time a velocity set with
-// setVelocity is reached
+// Register velocity reached callback
 dc.on(Tinkerforge.BrickDC.CALLBACK_VELOCITY_REACHED,
-    // Use velocity reached callback to swing back and forth between
-    // full speed forward and full speed backward
-    function(velocity) {
+    // Use velocity reached callback to swing back and forth
+    // between full speed forward and full speed backward
+    function (velocity) {
         if(velocity == 32767) {
-            console.log('Velocity: Full Speed forward, turning backward');
+            console.log('Velocity: Full speed forward, now turning backward');
             dc.setVelocity(-32767);
         }
         else if(velocity === -32767) {
-            console.log('Velocity: Full Speed backward, turning forward');
+            console.log('Velocity: Full speed backward, now turning forward');
             dc.setVelocity(32767);
         }
         else {
@@ -45,10 +46,10 @@ dc.on(Tinkerforge.BrickDC.CALLBACK_VELOCITY_REACHED,
     }
 );
 
-console.log("Press any key to exit ...");
+console.log('Press key to exit');
 process.stdin.on('data',
-    function(data) {
-        dc.disable();
+    function (data) {
+        dc.disable(); // Disable motor power
         ipcon.disconnect();
         process.exit(0);
     }

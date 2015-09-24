@@ -18,7 +18,7 @@ type
 const
   HOST = 'localhost';
   PORT = 4223;
-  UID = 'XYZ'; { Change to your UID }
+  UID = 'XXYYZZ'; { Change to your UID }
 
 var
   e: TExample;
@@ -35,16 +35,15 @@ begin
   ipcon.Connect(HOST, PORT);
   { Don't use device before ipcon is connected }
 
+  dc.SetDriveMode(BRICK_DC_DRIVE_MODE_DRIVE_COAST);
   dc.SetPWMFrequency(10000); { Use PWM frequency of 10kHz }
-  dc.SetDriveMode(1); { Use 1 = Drive/Coast instead of 0 = Drive/Brake }
-
-  dc.Enable;
   dc.SetAcceleration(5000); { Slow acceleration }
   dc.SetVelocity(32767); { Full speed forward }
+  dc.Enable; { Enable motor power }
 
   WriteLn('Press key to exit');
   ReadLn;
-  dc.Disable;
+  dc.Disable; { Disable motor power }
   ipcon.Destroy; { Calls ipcon.Disconnect internally }
 end;
 

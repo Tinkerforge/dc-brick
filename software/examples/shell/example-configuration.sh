@@ -1,20 +1,14 @@
 #!/bin/sh
-# connects to localhost:4223 by default, use --host and --port to change it
+# Connects to localhost:4223 by default, use --host and --port to change this
 
-# change to your UID
-uid=XYZ
+uid=XXYYZZ # Change to your UID
 
-# use PWM frequency of 10kHz
-tinkerforge call dc-brick $uid set-pwm-frequency 10000
-
-# use drive/coast instead of drive/brake
 tinkerforge call dc-brick $uid set-drive-mode drive-coast
+tinkerforge call dc-brick $uid set-pwm-frequency 10000 # Use PWM frequency of 10kHz
+tinkerforge call dc-brick $uid set-acceleration 5000 # Slow acceleration
+tinkerforge call dc-brick $uid set-velocity 32767 # Full speed forward
+tinkerforge call dc-brick $uid enable # Enable motor power
 
-# enable motor controller
-tinkerforge call dc-brick $uid enable
+echo "Press key to exit"; read dummy
 
-# slow acceleration
-tinkerforge call dc-brick $uid set-acceleration 5000
-
-# full speed forward
-tinkerforge call dc-brick $uid set-velocity 32767
+tinkerforge call dc-brick $uid disable # Disable motor power

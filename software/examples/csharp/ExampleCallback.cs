@@ -1,29 +1,30 @@
+using System;
 using Tinkerforge;
 
 class Example
 {
 	private static string HOST = "localhost";
 	private static int PORT = 4223;
-	private static string UID = "XYZ"; // Change to your UID
+	private static string UID = "XXYYZZ"; // Change to your UID
 
-	// Use velocity reached callback to swing back and forth between
-	// full speed forward and full speed backward
-	static void ReachedCB(BrickDC sender, short velocity)
+	// Use velocity reached callback to swing back and forth
+	// between full speed forward and full speed backward
+	static void VelocityReachedCB(BrickDC sender, short velocity)
 	{
 		if(velocity == 32767)
 		{
-			System.Console.WriteLine("Velocity: Full Speed forward, turning backward");
+			Console.WriteLine("Velocity: Full speed forward, now turning backward");
 			sender.SetVelocity(-32767);
 		}
 		else if(velocity == -32767)
 		{
-			System.Console.WriteLine("Velocity: Full Speed backward, turning forward");
+			Console.WriteLine("Velocity: Full speed backward, now turning forward");
 			sender.SetVelocity(32767);
 		}
 		else
 		{
 			// Can only happen if another program sets velocity
-			System.Console.WriteLine("Error");
+			Console.WriteLine("Error");
 		}
 	}
 
@@ -35,20 +36,21 @@ class Example
 		ipcon.Connect(HOST, PORT); // Connect to brickd
 		// Don't use device before ipcon is connected
 
-		// Register "velocity reached callback" to ReachedCB
-		// ReachedCB will be called every time a velocity set with
-		// SetVelocity is reached
-		dc.VelocityReached += ReachedCB;
-
-		dc.Enable();
-		// The acceleration has to be smaller or equal to the maximum acceleration
-		// of the DC motor, otherwise ReachedCB will be called too early
+		// The acceleration has to be smaller or equal to the maximum
+		// acceleration of the DC motor, otherwise the velocity reached
+		// callback will be called too early
 		dc.SetAcceleration(5000); // Slow acceleration
 		dc.SetVelocity(32767); // Full speed forward
 
-		System.Console.WriteLine("Press enter to exit");
-		System.Console.ReadLine();
-		dc.Disable();
+		// Register velocity reached callback to function VelocityReachedCB
+		dc.VelocityReached += VelocityReachedCB;
+
+		// Enable motor power
+		dc.Enable();
+
+		Console.WriteLine("Press enter to exit");
+		Console.ReadLine();
+		dc.Disable(); // Disable motor power
 		ipcon.Disconnect();
 	}
 }
