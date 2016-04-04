@@ -309,6 +309,7 @@ void dc_disable(void) {
 	dc_enabled = false;
 	// Set current velocity to 0 and keep old goal
 	dc_velocity = 0;
+	dc_velocity_to_pwm();
 
 	dc_led_error_reason &= ~DC_LED_ERROR_SHUTDOWN;
 	led_off(LED_STD_RED);

@@ -36,3 +36,6 @@
 
 2014-11-25: 2.3.0 (030fbc0)
 - Add support for new SPI protocol
+
+2016-04-04: 2.3.1 (<unknwon>)
+- Make setting velocity to 0 work while motor is disabled
