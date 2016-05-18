@@ -57,6 +57,7 @@ int main(void) {
 	printf("Press key to exit\n");
 	getchar();
 	dc_disable(&dc); // Disable motor power
+	dc_destroy(&dc);
 	ipcon_destroy(&ipcon); // Calls ipcon_disconnect internally
 	return 0;
 }
