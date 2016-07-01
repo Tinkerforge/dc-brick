@@ -1,7 +1,7 @@
 #!/bin/sh
 # Connects to localhost:4223 by default, use --host and --port to change this
 
-uid=XXYYZZ # Change to your UID
+uid=XXYYZZ # Change XXYYZZ to the UID of your DC Brick
 
 tinkerforge call dc-brick $uid set-drive-mode drive-coast
 tinkerforge call dc-brick $uid set-pwm-frequency 10000 # Use PWM frequency of 10kHz

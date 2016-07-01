@@ -1,7 +1,7 @@
 #!/bin/sh
 # Connects to localhost:4223 by default, use --host and --port to change this
 
-uid=XXYYZZ # Change to your UID
+uid=XXYYZZ # Change XXYYZZ to the UID of your DC Brick
 
 # The acceleration has to be smaller or equal to the maximum
 # acceleration of the DC motor, otherwise the velocity reached

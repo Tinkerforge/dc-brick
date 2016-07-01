@@ -2,7 +2,7 @@ var Tinkerforge = require('tinkerforge');
 
 var HOST = 'localhost';
 var PORT = 4223;
-var UID = 'XXYYZZ'; // Change to your UID
+var UID = 'XXYYZZ'; // Change XXYYZZ to the UID of your DC Brick
 
 var ipcon = new Tinkerforge.IPConnection(); // Create IP connection
 var dc = new Tinkerforge.BrickDC(UID, ipcon); // Create device object

@@ -3,7 +3,7 @@ function octave_example_callback()
 
     HOST = "localhost";
     PORT = 4223;
-    UID = "XXYYZZ"; % Change to your UID
+    UID = "XXYYZZ"; % Change XXYYZZ to the UID of your DC Brick
 
     ipcon = java_new("com.tinkerforge.IPConnection"); % Create IP connection
     dc = java_new("com.tinkerforge.BrickDC", UID, ipcon); % Create device object

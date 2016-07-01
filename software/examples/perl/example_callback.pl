@@ -5,7 +5,7 @@ use Tinkerforge::BrickDC;
 
 use constant HOST => 'localhost';
 use constant PORT => 4223;
-use constant UID => 'XXYYZZ'; # Change to your UID
+use constant UID => 'XXYYZZ'; # Change XXYYZZ to the UID of your DC Brick
 
 my $ipcon = Tinkerforge::IPConnection->new(); # Create IP connection
 our $dc = Tinkerforge::BrickDC->new(&UID, $ipcon); # Create device object

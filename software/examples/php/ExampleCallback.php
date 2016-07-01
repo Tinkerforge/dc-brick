@@ -8,7 +8,7 @@ use Tinkerforge\BrickDC;
 
 const HOST = 'localhost';
 const PORT = 4223;
-const UID = 'XXYYZZ'; // Change to your UID
+const UID = 'XXYYZZ'; // Change XXYYZZ to the UID of your DC Brick
 
 // Use velocity reached callback to swing back and forth
 // between full speed forward and full speed backward
