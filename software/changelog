@@ -41,4 +41,4 @@
 - Make setting velocity to 0 work while motor is disabled
 
 2016-08-29: 2.3.2 (af79780)
-- Make sure to use all chunks when writing firmware (through bricklib)
+- Make sure to use all chunks when writing Bricklet plugin (through bricklib)
