@@ -40,5 +40,5 @@
 2016-04-04: 2.3.1 (e45ed60)
 - Make setting velocity to 0 work while motor is disabled
 
-2016-29-08: 2.3.2 (?)
-- Make sure to use all chunks when writing firmware
+2016-08-29: 2.3.2 (af79780)
+- Make sure to use all chunks when writing firmware (through bricklib)
