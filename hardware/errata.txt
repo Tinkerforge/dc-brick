@@ -1,2 +1,3 @@
 put more space between components and mounting holes
 update mounting holes
+connectors placement as step down power supply
