@@ -43,7 +43,7 @@ class Example
 		dc.SetVelocity(32767); // Full speed forward
 
 		// Register velocity reached callback to function VelocityReachedCB
-		dc.VelocityReached += VelocityReachedCB;
+		dc.VelocityReachedCallback += VelocityReachedCB;
 
 		// Enable motor power
 		dc.Enable();
