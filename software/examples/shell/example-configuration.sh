@@ -3,7 +3,7 @@
 
 uid=XXYYZZ # Change XXYYZZ to the UID of your DC Brick
 
-tinkerforge call dc-brick $uid set-drive-mode drive-coast
+tinkerforge call dc-brick $uid set-drive-mode drive-mode-drive-coast
 tinkerforge call dc-brick $uid set-pwm-frequency 10000 # Use PWM frequency of 10kHz
 tinkerforge call dc-brick $uid set-acceleration 5000 # Slow acceleration
 tinkerforge call dc-brick $uid set-velocity 32767 # Full speed forward
