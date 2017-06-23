@@ -5,8 +5,8 @@ function octave_example_callback()
     PORT = 4223;
     UID = "XXYYZZ"; % Change XXYYZZ to the UID of your DC Brick
 
-    ipcon = java_new("com.tinkerforge.IPConnection"); % Create IP connection
-    dc = java_new("com.tinkerforge.BrickDC", UID, ipcon); % Create device object
+    ipcon = javaObject("com.tinkerforge.IPConnection"); % Create IP connection
+    dc = javaObject("com.tinkerforge.BrickDC", UID, ipcon); % Create device object
 
     ipcon.connect(HOST, PORT); % Connect to brickd
     % Don't use device before ipcon is connected
