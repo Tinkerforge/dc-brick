@@ -30,7 +30,7 @@ VelocityReachedCB[sender_,velocity_]:=
   ];
  ]
 
-AddEventHandler[dc@VelocityReached,VelocityReachedCB]
+AddEventHandler[dc@VelocityReachedCallback,VelocityReachedCB]
 
 (*Enable motor power*)
 dc@Enable[]
