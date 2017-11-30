@@ -35,7 +35,7 @@ Module ExampleCallback
         dc.SetVelocity(32767) ' Full speed forward
 
         ' Register velocity reached callback to subroutine VelocityReachedCB
-        AddHandler dc.VelocityReached, AddressOf VelocityReachedCB
+        AddHandler dc.VelocityReachedCallback, AddressOf VelocityReachedCB
 
         ' Enable motor power
         dc.Enable()
