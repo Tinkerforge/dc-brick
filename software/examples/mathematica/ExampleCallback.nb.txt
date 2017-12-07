@@ -27,7 +27,7 @@ VelocityReachedCB[sender_,velocity_]:=
   If[velocity==-32767,
    Print["Velocity: Full speed backward, now turning forward"];
    sender@SetVelocity[32767]
-  ];
+  ]
  ]
 
 AddEventHandler[dc@VelocityReachedCallback,VelocityReachedCB]
