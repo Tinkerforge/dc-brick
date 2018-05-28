@@ -10,7 +10,7 @@ ipcon=NETNew["Tinkerforge.IPConnection"]
 dc=NETNew["Tinkerforge.BrickDC",uid,ipcon]
 ipcon@Connect[host,port]
 
-dc@SetDriveMode[BrickDC`DRIVEUMODEUDRIVEUCOAST]
+dc@SetDriveMode[Tinkerforge`BrickDC`DRIVEUMODEUDRIVEUCOAST]
 dc@SetPWMFrequency[10000](*Use PWM frequency of 10kHz*)
 dc@SetAcceleration[5000](*Slow acceleration*)
 dc@SetVelocity[32767](*Full speed forward*)
