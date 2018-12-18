@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"tinkerforge/dc_brick"
-	"tinkerforge/ipconnection"
+	"github.com/tinkerforge/go-api-bindings/dc_brick"
+	"github.com/tinkerforge/go-api-bindings/ipconnection"
 )
 
 const ADDR string = "localhost:4223"
