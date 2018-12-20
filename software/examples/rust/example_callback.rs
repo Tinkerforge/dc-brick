@@ -18,9 +18,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     dc.set_acceleration(5000); // Slow acceleration
     dc.set_velocity(32767); // Full speed forward
 
-    
     let velocity_reached_receiver = dc.get_velocity_reached_callback_receiver();
-    
+
     // Spawn thread to handle received callback messages. This thread ends when the dc
     // is dropped, so there is no need for manual cleanup.
     let dc_copy = dc.clone(); //Device objects don't implement Sync, so they can't be shared between threads (by reference). So clone the device and move the copy.
