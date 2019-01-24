@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/Tinkerforge/go-api-bindings/dc_brick"
 	"github.com/Tinkerforge/go-api-bindings/ipconnection"
-    "github.com/Tinkerforge/go-api-bindings/dc_brick"
 )
 
 const ADDR string = "localhost:4223"
@@ -11,11 +11,11 @@ const UID string = "XXYYZZ" // Change XXYYZZ to the UID of your DC Brick.
 
 func main() {
 	ipcon := ipconnection.New()
-    defer ipcon.Close()
+	defer ipcon.Close()
 	dc, _ := dc_brick.New(UID, &ipcon) // Create device object.
 
 	ipcon.Connect(ADDR) // Connect to brickd.
-    defer ipcon.Disconnect()
+	defer ipcon.Disconnect()
 	// Don't use device before ipcon is connected.
 
 	// The acceleration has to be smaller or equal to the maximum
@@ -44,5 +44,4 @@ func main() {
 	fmt.Scanln()
 
 	dc.Disable() // Disable motor power
-	ipcon.Disconnect()
 }
