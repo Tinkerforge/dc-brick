@@ -48,7 +48,7 @@ int main(void) {
 	// Register velocity reached callback to function cb_velocity_reached
 	dc_register_callback(&dc,
 	                     DC_CALLBACK_VELOCITY_REACHED,
-	                     (void *)cb_velocity_reached,
+	                     (void (*)(void))cb_velocity_reached,
 	                     &dc);
 
 	// Enable motor power
