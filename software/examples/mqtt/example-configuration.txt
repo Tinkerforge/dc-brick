@@ -2,13 +2,13 @@
 
 setup:
 	publish '{"mode": "drive_coast"}' to tinkerforge/request/dc_brick/XXYYZZ/set_drive_mode 
-	
+
 	publish '{"frequency": 10000}' to tinkerforge/request/dc_brick/XXYYZZ/set_pwm_frequency  # Use PWM frequency of 10kHz
-	
+
 	publish '{"acceleration": 5000}' to tinkerforge/request/dc_brick/XXYYZZ/set_acceleration  # Slow acceleration
-	
+
 	publish '{"velocity": 32767}' to tinkerforge/request/dc_brick/XXYYZZ/set_velocity  # Full speed forward
-	
+
 	publish '' to tinkerforge/request/dc_brick/XXYYZZ/enable  # Enable motor power
 
 cleanup:
