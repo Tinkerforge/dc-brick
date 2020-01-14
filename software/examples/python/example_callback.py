@@ -40,6 +40,6 @@ if __name__ == "__main__":
     # Enable motor power
     dc.enable()
 
-    raw_input("Press key to exit\n") # Use input() in Python 3
+    input("Press key to exit\n") # Use raw_input() in Python 2
     dc.disable() # Disable motor power
     ipcon.disconnect()
