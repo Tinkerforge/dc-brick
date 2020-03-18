@@ -1,16 +1,16 @@
 use std::{error::Error, io, thread};
 use tinkerforge::{dc_brick::*, ip_connection::IpConnection};
 
-const HOST: &str = "127.0.0.1";
+const HOST: &str = "localhost";
 const PORT: u16 = 4223;
-const UID: &str = "XXYYZZ"; // Change XXYYZZ to the UID of your DC Brick
+const UID: &str = "XXYYZZ"; // Change XXYYZZ to the UID of your DC Brick.
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let ipcon = IpConnection::new(); // Create IP connection
-    let dc = DcBrick::new(UID, &ipcon); // Create device object
+    let ipcon = IpConnection::new(); // Create IP connection.
+    let dc = DcBrick::new(UID, &ipcon); // Create device object.
 
-    ipcon.connect((HOST, PORT)).recv()??; // Connect to brickd
-                                          // Don't use device before ipcon is connected
+    ipcon.connect((HOST, PORT)).recv()??; // Connect to brickd.
+                                          // Don't use device before ipcon is connected.
 
     // The acceleration has to be smaller or equal to the maximum
     // acceleration of the DC motor, otherwise the velocity reached
@@ -20,7 +20,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let velocity_reached_receiver = dc.get_velocity_reached_callback_receiver();
 
-    // Spawn thread to handle received callback messages. This thread ends when the dc
+    // Spawn thread to handle received callback messages.
+    // This thread ends when the `dc` object
     // is dropped, so there is no need for manual cleanup.
     let dc_copy = dc.clone(); //Device objects don't implement Sync, so they can't be shared between threads (by reference). So clone the device and move the copy.
     thread::spawn(move || {
