@@ -15,8 +15,8 @@ function matlab_example_callback()
     % The acceleration has to be smaller or equal to the maximum
     % acceleration of the DC motor, otherwise the velocity reached
     % callback will be called too early
-    dc.setAcceleration(5000); % Slow acceleration
-    dc.setVelocity(32767); % Full speed forward
+    dc.setAcceleration(4096); % Slow acceleration (12.5 %/s)
+    dc.setVelocity(32767); % Full speed forward (100 %)
 
     % Register velocity reached callback to function cb_velocity_reached
     set(dc, 'VelocityReachedCallback', @(h, e) cb_velocity_reached(e));
@@ -25,7 +25,13 @@ function matlab_example_callback()
     dc.enable();
 
     input('Press key to exit\n', 's');
+
+    % Stop motor before disabling motor power
+    dc.setAcceleration(16384); % Fast decceleration (50 %/s) for stopping
+    dc.setVelocity(0); % Request motor stop
+    pause(2); % Wait for motor to actually stop: velocity (100 %) / decceleration (50 %/s) = 2 s
     dc.disable(); % Disable motor power
+
     ipcon.disconnect();
 end
 

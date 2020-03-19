@@ -22,8 +22,8 @@ public class ExampleCallback {
 		// The acceleration has to be smaller or equal to the maximum
 		// acceleration of the DC motor, otherwise the velocity reached
 		// callback will be called too early
-		dc.setAcceleration(5000); // Slow acceleration
-		dc.setVelocity((short)32767); // Full speed forward
+		dc.setAcceleration(4096); // Slow acceleration (12.5 %/s)
+		dc.setVelocity((short)32767); // Full speed forward (100 %)
 
 		// Use velocity reached callback to swing back and forth
 		// between full speed forward and full speed backward
@@ -51,7 +51,13 @@ public class ExampleCallback {
 		dc.enable();
 
 		System.out.println("Press key to exit"); System.in.read();
+
+		// Stop motor before disabling motor power
+		dc.setAcceleration(16384); // Fast decceleration (50 %/s) for stopping
+		dc.setVelocity((short)0); // Request motor stop
+		Thread.sleep(2000); // Wait for motor to actually stop: velocity (100 %) / decceleration (50 %/s) = 2 s
 		dc.disable(); // Disable motor power
+
 		ipcon.disconnect();
 	}
 }

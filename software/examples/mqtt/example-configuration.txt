@@ -1,16 +1,23 @@
 # Change XXYYZZ to the UID of your DC Brick
 
 setup:
-	publish '{"mode": "drive_coast"}' to tinkerforge/request/dc_brick/XXYYZZ/set_drive_mode 
+	publish '{"mode": "drive_coast"}' to tinkerforge/request/dc_brick/XXYYZZ/set_drive_mode
 
-	publish '{"frequency": 10000}' to tinkerforge/request/dc_brick/XXYYZZ/set_pwm_frequency  # Use PWM frequency of 10kHz
+	publish '{"frequency": 10000}' to tinkerforge/request/dc_brick/XXYYZZ/set_pwm_frequency # Use PWM frequency of 10 kHz
 
-	publish '{"acceleration": 5000}' to tinkerforge/request/dc_brick/XXYYZZ/set_acceleration  # Slow acceleration
+	publish '{"acceleration": 4096}' to tinkerforge/request/dc_brick/XXYYZZ/set_acceleration # Slow acceleration (12.5 %/s)
 
-	publish '{"velocity": 32767}' to tinkerforge/request/dc_brick/XXYYZZ/set_velocity  # Full speed forward
+	publish '{"velocity": 32767}' to tinkerforge/request/dc_brick/XXYYZZ/set_velocity # Full speed forward (100 %)
 
-	publish '' to tinkerforge/request/dc_brick/XXYYZZ/enable  # Enable motor power
+	publish '' to tinkerforge/request/dc_brick/XXYYZZ/enable # Enable motor power
 
 cleanup:
 	# If you are done, run this to clean up
-	publish '' to tinkerforge/request/dc_brick/XXYYZZ/disable  # Disable motor power
+	# Stop motor before disabling motor power
+	publish '{"acceleration": 16384}' to tinkerforge/request/dc_brick/XXYYZZ/set_acceleration # Fast decceleration (50 %/s) for stopping
+
+	publish '{"velocity": 0}' to tinkerforge/request/dc_brick/XXYYZZ/set_velocity # Request motor stop
+
+	wait for 2s # Wait for motor to actually stop: velocity (100 %) / decceleration (50 %/s) = 2 s
+
+	publish '' to tinkerforge/request/dc_brick/XXYYZZ/disable # Disable motor power

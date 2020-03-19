@@ -21,8 +21,8 @@ func main() {
 	// The acceleration has to be smaller or equal to the maximum
 	// acceleration of the DC motor, otherwise the velocity reached
 	// callback will be called too early
-	dc.SetAcceleration(5000) // Slow acceleration
-	dc.SetVelocity(32767)    // Full speed forward
+	dc.SetAcceleration(4096) // Slow acceleration (12.5 %/s)
+	dc.SetVelocity(32767)    // Full speed forward (100 %)
 
 	dc.RegisterVelocityReachedCallback(func(velocity int16) {
 		if velocity == 32767 {
@@ -43,5 +43,9 @@ func main() {
 	fmt.Print("Press enter to exit.")
 	fmt.Scanln()
 
-	dc.Disable() // Disable motor power
+	// Stop motor before disabling motor power
+	dc.SetAcceleration(16384)           // Fast decceleration (50 %/s) for stopping
+	dc.SetVelocity(0)                   // Request motor stop
+	time.Sleep(2000 * time.Millisecond) // Wait for motor to actually stop: velocity (100 %) / decceleration (50 %/s) = 2 s
+	dc.Disable()                        // Disable motor power
 }

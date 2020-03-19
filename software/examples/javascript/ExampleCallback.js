@@ -19,8 +19,8 @@ ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
         // The acceleration has to be smaller or equal to the maximum
         // acceleration of the DC motor, otherwise the velocity reached
         // callback will be called too early
-        dc.setAcceleration(5000); // Slow acceleration
-        dc.setVelocity(32767); // Full speed forward
+        dc.setAcceleration(4096); // Slow acceleration (12.5 %/s)
+        dc.setVelocity(32767); // Full speed forward (100 %)
 
         // Enable motor power
         dc.enable();
@@ -49,8 +49,15 @@ dc.on(Tinkerforge.BrickDC.CALLBACK_VELOCITY_REACHED,
 console.log('Press key to exit');
 process.stdin.on('data',
     function (data) {
-        dc.disable(); // Disable motor power
-        ipcon.disconnect();
-        process.exit(0);
+        // Stop motor before disabling motor power
+        dc.setAcceleration(16384); // Fast decceleration (50 %/s) for stopping
+        dc.setVelocity(0); // Request motor stop
+
+        setTimeout(function () {
+            dc.disable(); // Disable motor power
+
+            ipcon.disconnect();
+            process.exit(0);
+        }, 2000); // Wait for motor to actually stop: velocity (100 %) / decceleration (50 %/s) = 2 s
     }
 );

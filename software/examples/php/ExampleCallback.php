@@ -36,8 +36,8 @@ $ipcon->connect(HOST, PORT); // Connect to brickd
 // The acceleration has to be smaller or equal to the maximum
 // acceleration of the DC motor, otherwise the velocity reached
 // callback will be called too early
-$dc->setAcceleration(5000); // Slow acceleration
-$dc->setVelocity(32767); // Full speed forward
+$dc->setAcceleration(4096); // Slow acceleration (12.5 %/s)
+$dc->setVelocity(32767); // Full speed forward (100 %)
 
 // Register velocity reached callback to function cb_velocityReached
 $dc->registerCallback(BrickDC::CALLBACK_VELOCITY_REACHED, 'cb_velocityReached', $dc);

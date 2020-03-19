@@ -4,29 +4,39 @@ setup:
 	# The acceleration has to be smaller or equal to the maximum
 	# acceleration of the DC motor, otherwise the velocity reached
 	# callback will be called too early
-	publish '{"acceleration": 5000}' to tinkerforge/request/dc_brick/XXYYZZ/set_acceleration  # Slow acceleration
-	publish '{"velocity": 32767}' to tinkerforge/request/dc_brick/XXYYZZ/set_velocity  # Full speed forward
-	
+	publish '{"acceleration": 4096}' to tinkerforge/request/dc_brick/XXYYZZ/set_acceleration # Slow acceleration (12.5 %/s)
+
+	publish '{"velocity": 32767}' to tinkerforge/request/dc_brick/XXYYZZ/set_velocity # Full speed forward (100 %)
+
 	# Use velocity reached callback to swing back and forth
 	# between full speed forward and full speed backward
 	subscribe to tinkerforge/callback/dc_brick/XXYYZZ/velocity_reached
-        if a message arrives
-            # message contains velocity as int
-            if velocity == 32767
-                print "Velocity: Full speed forward, now turning backward"
-                publish '{"velocity": -32767}' to tinkerforge/request/dc_brick/XXYYZZ/set_velocity
-            elseif velocity == -32767
-                print "Velocity: Full speed backward, now turning forward"
-                publish '{"velocity": 32767}' to tinkerforge/request/dc_brick/XXYYZZ/set_velocity
-            else
-                print "Error"
-            endif
-        endif
+		if a message arrives
+			# message contains velocity as int
+			if velocity == 32767
+				print "Velocity: Full speed forward, now turning backward"
+				publish '{"velocity": -32767}' to tinkerforge/request/dc_brick/XXYYZZ/set_velocity
+			elseif velocity == -32767
+				print "Velocity: Full speed backward, now turning forward"
+				publish '{"velocity": 32767}' to tinkerforge/request/dc_brick/XXYYZZ/set_velocity
+			else
+				print "Error"
+			endif
+		endif
 	endsubscribe
-	publish '{"register": true}' to tinkerforge/register/dc_brick/XXYZZ/velocity_reached
+
+	publish '{"register": true}' to tinkerforge/register/dc_brick/XXYYZZ/velocity_reached # Register velocity_reached callback
+
 	# Enable motor power
-	publish '' to tinkerforge/request/dc_brick/XXYYZZ/enable 
+	publish '' to tinkerforge/request/dc_brick/XXYYZZ/enable
 
 cleanup:
 	# If you are done, run this to clean up
-	publish '' to tinkerforge/request/dc_brick/XXYYZZ/disable  # Disable motor power
+	# Stop motor before disabling motor power
+	publish '{"acceleration": 16384}' to tinkerforge/request/dc_brick/XXYYZZ/set_acceleration # Fast decceleration (50 %/s) for stopping
+
+	publish '{"velocity": 0}' to tinkerforge/request/dc_brick/XXYYZZ/set_velocity # Request motor stop
+
+	wait for 2s # Wait for motor to actually stop: velocity (100 %) / decceleration (50 %/s) = 2 s
+
+	publish '' to tinkerforge/request/dc_brick/XXYYZZ/disable # Disable motor power

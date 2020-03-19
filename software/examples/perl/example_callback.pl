@@ -39,8 +39,8 @@ $ipcon->connect(&HOST, &PORT); # Connect to brickd
 # The acceleration has to be smaller or equal to the maximum
 # acceleration of the DC motor, otherwise the velocity reached
 # callback will be called too early
-$dc->set_acceleration(5000); # Slow acceleration
-$dc->set_velocity(32767); # Full speed forward
+$dc->set_acceleration(4096); # Slow acceleration (12.5 %/s)
+$dc->set_velocity(32767); # Full speed forward (100 %)
 
 # Register velocity reached callback to subroutine cb_velocity_reached
 $dc->register_callback($dc->CALLBACK_VELOCITY_REACHED, 'cb_velocity_reached');
@@ -50,5 +50,11 @@ $dc->enable();
 
 print "Press key to exit\n";
 <STDIN>;
+
+# Stop motor before disabling motor power
+$dc->set_acceleration(16384); # Fast decceleration (50 %/s) for stopping
+$dc->set_velocity(0); # Request motor stop
+sleep(2); # Wait for motor to actually stop: velocity (100 %) / decceleration (50 %/s) = 2 s
 $dc->disable(); # Disable motor power
+
 $ipcon->disconnect();

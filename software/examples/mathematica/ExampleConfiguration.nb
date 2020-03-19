@@ -19,17 +19,22 @@ Notebook[{
    RowBox[{"
 "}],
    RowBox[{"dc", "@", RowBox[{"SetDriveMode", "[", "Tinkerforge`BrickDC`DRIVEUMODEUDRIVEUCOAST", "]"}]}],
-   RowBox[{"dc", "@", RowBox[{"SetPWMFrequency", "[", "10000", "]"}], RowBox[{"(*", "Use PWM frequency of 10kHz", "*)"}]}],
-   RowBox[{"dc", "@", RowBox[{"SetAcceleration", "[", "5000", "]"}], RowBox[{"(*", "Slow acceleration", "*)"}]}],
-   RowBox[{"dc", "@", RowBox[{"SetVelocity", "[", "32767", "]"}], RowBox[{"(*", "Full speed forward", "*)"}]}],
+   RowBox[{"dc", "@", RowBox[{"SetPWMFrequency", "[", "10000", "]"}], RowBox[{"(*", "Use PWM frequency of 10 kHz", "*)"}]}],
+   RowBox[{"dc", "@", RowBox[{"SetAcceleration", "[", "4096", "]"}], RowBox[{"(*", "Slow acceleration (12.5 %/s)", "*)"}]}],
+   RowBox[{"dc", "@", RowBox[{"SetVelocity", "[", "32767", "]"}], RowBox[{"(*", "Full speed forward (100 %)", "*)"}]}],
    RowBox[{"dc", "@", RowBox[{"Enable", "[", "]"}], RowBox[{"(*", "Enable motor power", "*)"}]}],
    RowBox[{"
 "}],
    RowBox[{"Input", "[", "\"\<Click OK to exit\>\"", "]"}],
    RowBox[{"
 "}],
-   RowBox[{"(*", "Clean up", "*)"}],
+   RowBox[{"(*", "Stop motor before disabling motor power", "*)"}],
+   RowBox[{"dc", "@", RowBox[{"SetAcceleration", "[", "16384", "]"}], RowBox[{"(*", "Fast decceleration (50 %/s) for stopping", "*)"}]}],
+   RowBox[{"dc", "@", RowBox[{"SetVelocity", "[", "0", "]"}], RowBox[{"(*", "Request motor stop", "*)"}]}],
+   RowBox[{RowBox[{"Pause", "[", "2", "]"}], RowBox[{"(*", "Wait for motor to actually stop: velocity (100 %) / decceleration (50 %/s) = 2 s", "*)"}]}],
    RowBox[{"dc", "@", RowBox[{"Disable", "[", "]"}], RowBox[{"(*", "Disable motor power", "*)"}]}],
+   RowBox[{"
+"}],
    RowBox[{"ipcon", "@", RowBox[{"Disconnect", "[", "]"}]}],
    RowBox[{"ReleaseNETObject", "[", "dc", "]"}],
    RowBox[{"ReleaseNETObject", "[", "ipcon", "]"}]

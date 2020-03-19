@@ -31,8 +31,8 @@ Module ExampleCallback
         ' The acceleration has to be smaller or equal to the maximum
         ' acceleration of the DC motor, otherwise the velocity reached
         ' callback will be called too early
-        dc.SetAcceleration(5000) ' Slow acceleration
-        dc.SetVelocity(32767) ' Full speed forward
+        dc.SetAcceleration(4096) ' Slow acceleration (12.5 %/s)
+        dc.SetVelocity(32767) ' Full speed forward (100 %)
 
         ' Register velocity reached callback to subroutine VelocityReachedCB
         AddHandler dc.VelocityReachedCallback, AddressOf VelocityReachedCB
@@ -42,7 +42,13 @@ Module ExampleCallback
 
         Console.WriteLine("Press key to exit")
         Console.ReadLine()
+
+        ' Stop motor before disabling motor power
+        dc.SetAcceleration(16384) ' Fast decceleration (50 %/s) for stopping
+        dc.SetVelocity(0) ' Request motor stop
+        Thread.Sleep(2000) ' Wait for motor to actually stop: velocity (100 %) / decceleration (50 %/s) = 2 s
         dc.Disable() ' Disable motor power
+
         ipcon.Disconnect()
     End Sub
 End Module
