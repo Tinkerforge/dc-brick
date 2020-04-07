@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Tinkerforge/go-api-bindings/dc_brick"
 	"github.com/Tinkerforge/go-api-bindings/ipconnection"
+	"time"
 )
 
 const ADDR string = "localhost:4223"
