@@ -48,7 +48,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Stop motor before disabling motor power
     dc.set_acceleration(16384); // Fast decceleration (50 %/s) for stopping
-    dc.set_velocity(0); // Request motor stop
+    dc.set_velocity(0).recv()?; // Request motor stop; use recv()? to block until the command is sent to the brick.
     thread::sleep(Duration::from_millis(2000)); // Wait for motor to actually stop: velocity (100 %) / decceleration (50 %/s) = 2 s
     dc.disable(); // Disable motor power
 
