@@ -69,5 +69,5 @@
   - Increase SPI stack timeout (for RED Brick)
   - Fix bugs in set/get_spitfp_* functions
 
-2020-05-14: 2.3.10 (<unknown>)
+2020-05-14: 2.3.10 (89631c1)
 - Fix get drive mode response length
