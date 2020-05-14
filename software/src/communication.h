@@ -228,7 +228,7 @@ typedef struct {
 
 typedef struct {
 	MessageHeader header;
-	uint16_t mode;
+	uint8_t mode;
 } __attribute__((__packed__)) GetDriveModeReturn;
 
 typedef struct {

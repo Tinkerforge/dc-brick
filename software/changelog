@@ -68,3 +68,6 @@
   - Fix Bricklet port miss-identification
   - Increase SPI stack timeout (for RED Brick)
   - Fix bugs in set/get_spitfp_* functions
+
+2020-05-14: 2.3.10 (<unknown>)
+- Fix get drive mode response length
