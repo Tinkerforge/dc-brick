@@ -1,36 +1,5 @@
-EESchema Schematic File Version 2
-LIBS:tinkerforge
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:74xx
-LIBS:cmos4000
-LIBS:adc-dac
-LIBS:memory
-LIBS:xilinx
-LIBS:microcontrollers
-LIBS:dsp
-LIBS:microchip
-LIBS:analog_switches
-LIBS:motorola
-LIBS:texas
-LIBS:intel
-LIBS:audio
-LIBS:interface
-LIBS:digital-audio
-LIBS:philips
-LIBS:display
-LIBS:cypress
-LIBS:siliconi
-LIBS:opto
-LIBS:atmel
-LIBS:contrib
-LIBS:valves
-LIBS:dc-cache
-EELAYER 25 0
+EESchema Schematic File Version 4
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -67,10 +36,10 @@ Wire Wire Line
 	7550 4700 7800 4700
 Connection ~ 5000 3600
 Wire Wire Line
-	5000 2750 5000 4500
+	5000 2750 5000 3600
 Connection ~ 4900 3700
 Wire Wire Line
-	4900 4600 4900 2850
+	4900 4600 4900 3700
 Wire Wire Line
 	6550 3350 7800 3350
 Wire Wire Line
@@ -86,7 +55,7 @@ Connection ~ 3200 2750
 Wire Wire Line
 	3200 2650 3200 2750
 Wire Wire Line
-	5000 3600 2450 3600
+	5000 3600 3050 3600
 Wire Wire Line
 	4900 4600 7800 4600
 Wire Wire Line
@@ -100,9 +69,9 @@ Wire Wire Line
 Wire Wire Line
 	5000 4500 7800 4500
 Wire Wire Line
-	4900 3700 2450 3700
+	4900 3700 3350 3700
 Wire Wire Line
-	3350 2750 3050 2750
+	3350 2750 3250 2750
 Wire Wire Line
 	3050 3250 3050 3600
 Connection ~ 3050 3600
@@ -134,7 +103,7 @@ Wire Wire Line
 	3250 2850 3250 2750
 Connection ~ 3250 2750
 $Comp
-L R_PACK4 RP4
+L tinkerforge:R_PACK4 RP4
 U 1 1 4D9DB274
 P 3400 3050
 F 0 "RP4" H 3400 3500 40  0000 C CNN
@@ -145,7 +114,7 @@ F 3 "" H 3400 3050 60  0001 C CNN
 	0    -1   1    0   
 $EndComp
 $Comp
-L GND #PWR025
+L tinkerforge:GND #PWR025
 U 1 1 4D0FDD4E
 P 7550 4750
 F 0 "#PWR025" H 7550 4750 30  0001 C CNN
@@ -156,7 +125,7 @@ F 3 "" H 7550 4750 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 3V3 #PWR026
+L tinkerforge:3V3 #PWR026
 U 1 1 4D0FDD41
 P 7350 2650
 F 0 "#PWR026" H 7350 2750 40  0001 C CNN
@@ -167,7 +136,7 @@ F 3 "" H 7350 2650 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 3V3 #PWR027
+L tinkerforge:3V3 #PWR027
 U 1 1 4CAC8AB4
 P 3200 2650
 F 0 "#PWR027" H 3200 2750 40  0001 C CNN
@@ -178,7 +147,7 @@ F 3 "" H 3200 2650 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +5V #PWR028
+L tinkerforge:+5V #PWR028
 U 1 1 4CAC88B4
 P 7800 2350
 F 0 "#PWR028" H 7800 2440 20  0001 C CNN
@@ -189,7 +158,7 @@ F 3 "" H 7800 2350 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +5V #PWR029
+L tinkerforge:+5V #PWR029
 U 1 1 4CAC88AE
 P 7800 4100
 F 0 "#PWR029" H 7800 4190 20  0001 C CNN
@@ -200,7 +169,7 @@ F 3 "" H 7800 4100 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 3V3 #PWR030
+L tinkerforge:3V3 #PWR030
 U 1 1 4CAC87D9
 P 7600 4100
 F 0 "#PWR030" H 7600 4200 40  0001 C CNN
@@ -211,7 +180,7 @@ F 3 "" H 7600 4100 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 3V3 #PWR031
+L tinkerforge:3V3 #PWR031
 U 1 1 4CAC87D4
 P 7600 2350
 F 0 "#PWR031" H 7600 2450 40  0001 C CNN
@@ -222,7 +191,7 @@ F 3 "" H 7600 2350 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR032
+L tinkerforge:GND #PWR032
 U 1 1 4CAC87AD
 P 7500 2650
 F 0 "#PWR032" H 7500 2650 30  0001 C CNN
@@ -233,7 +202,7 @@ F 3 "" H 7500 2650 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR033
+L tinkerforge:GND #PWR033
 U 1 1 4CAC87A9
 P 7500 4400
 F 0 "#PWR033" H 7500 4400 30  0001 C CNN
@@ -264,7 +233,7 @@ BRICKLET-I2C-SCL
 Text GLabel 2450 3700 0    60   Input ~ 0
 BRICKLET-I2C-SDA
 $Comp
-L GND #PWR034
+L tinkerforge:GND #PWR034
 U 1 1 4CAC33F4
 P 8250 5300
 F 0 "#PWR034" H 8250 5300 30  0001 C CNN
@@ -275,7 +244,7 @@ F 3 "" H 8250 5300 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR035
+L tinkerforge:GND #PWR035
 U 1 1 4CAC33ED
 P 8250 3550
 F 0 "#PWR035" H 8250 3550 30  0001 C CNN
@@ -286,7 +255,7 @@ F 3 "" H 8250 3550 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L CON-SENSOR P4
+L tinkerforge:CON-SENSOR P4
 U 1 1 4CAC3392
 P 8250 4650
 F 0 "P4" H 8000 5200 60  0000 C CNN
@@ -297,7 +266,7 @@ F 3 "" H 8250 4650 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L CON-SENSOR P3
+L tinkerforge:CON-SENSOR P3
 U 1 1 4CAC338E
 P 8250 2900
 F 0 "P3" H 8000 3450 60  0000 C CNN
@@ -307,4 +276,18 @@ F 3 "" H 8250 2900 60  0001 C CNN
 	1    8250 2900
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	3150 2750 3050 2750
+Wire Wire Line
+	5000 3600 5000 4500
+Wire Wire Line
+	4900 3700 4900 2850
+Wire Wire Line
+	3350 3700 2450 3700
+Wire Wire Line
+	3200 2750 3150 2750
+Wire Wire Line
+	3050 3600 2450 3600
+Wire Wire Line
+	3250 2750 3200 2750
 $EndSCHEMATC
