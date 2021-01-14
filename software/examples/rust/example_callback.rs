@@ -23,7 +23,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     // Spawn thread to handle received callback messages.
     // This thread ends when the `dc` object
     // is dropped, so there is no need for manual cleanup.
-    let dc_copy = dc.clone(); //Device objects don't implement Sync, so they can't be shared between threads (by reference). So clone the device and move the copy.
+    let dc_copy = dc.clone(); // Device objects don't implement Sync, so they can't be shared
+                              // between threads (by reference). So clone the device and move the copy.
     thread::spawn(move || {
         for velocity_reached in velocity_reached_receiver {
             if velocity_reached == 32767 {
