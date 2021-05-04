@@ -38,7 +38,7 @@ end
 % between full speed forward and full speed backward
 function cb_velocity_reached(e)
     dc = e.getSource();
-    velocity = short2int(e.velocity);
+    velocity = java2int(e.velocity);
 
     if velocity == 32767
         fprintf("Velocity: Full speed forward, now turning backward\n");
