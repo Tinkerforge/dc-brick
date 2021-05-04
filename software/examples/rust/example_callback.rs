@@ -34,7 +34,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 println!("Velocity: Full speed backward, now turning forward");
                 dc_copy.set_velocity(32767);
             } else {
-                //can only happen if another program sets velocity
+                // Can only happen if another program sets velocity
                 panic!("Error");
             }
         }
